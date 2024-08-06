@@ -6,6 +6,7 @@ import (
 )
 
 var ApiModule = fx.Options(
-	fx.Provide(server.ProviderGinServer),
+	fx.Provide(server.ProvideGinServer),
+	fx.Invoke(server.ConfigureCors),
 	fx.Invoke(server.StartGinServer),
 )

@@ -29,7 +29,8 @@ func StartGinServer(
 	})
 }
 
-func ProviderGinServer() *gin.Engine {
+// ProvideGinServer Provide Gin Engine Server
+func ProvideGinServer() *gin.Engine {
 	gin.SetMode(gin.ReleaseMode)
 	return gin.New()
 }
