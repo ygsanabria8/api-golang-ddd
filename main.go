@@ -1,10 +1,15 @@
 package main
 
 import (
+	"api.ddd/src/api/server"
 	"api.ddd/src/fxmodule"
 	"go.uber.org/fx"
 )
 
 func main() {
-	fx.New(fxmodule.ApiModule).Run()
+	logger := server.ProvideLogger().GetFxLogger()
+	fx.New(
+		fxmodule.ApiModule,
+		fx.Logger(logger),
+	).Run()
 }

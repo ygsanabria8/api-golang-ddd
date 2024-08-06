@@ -2,13 +2,13 @@ package server
 
 import (
 	"context"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/fx"
 )
 
 func StartGinServer(
 	lifecycle fx.Lifecycle, server *gin.Engine,
+	logger *Logger,
 ) {
 	lifecycle.Append(fx.Hook{
 		OnStart: func(context.Context) error {
@@ -16,21 +16,23 @@ func StartGinServer(
 				server.Use(gin.Recovery())
 				err := server.Run("127.0.0.1:11000")
 				if err != nil {
-					panic("Error starting server")
+					logger.Fatalf("Error starting server: %s", err.Error())
+					//panic("Error starting server")
 				}
-				fmt.Println("Server started")
+				logger.Infof("Server started on port 11000")
 			}()
 			return nil
 		},
 		OnStop: func(ctx context.Context) error {
-			fmt.Println("Shutting down server")
+			logger.Infof("Shutting down server")
 			return nil
 		},
 	})
 }
 
 // ProvideGinServer Provide Gin Engine Server
-func ProvideGinServer() *gin.Engine {
+func ProvideGinServer(logger *Logger) *gin.Engine {
 	gin.SetMode(gin.ReleaseMode)
+	gin.DefaultWriter = logger.GetGinLogger()
 	return gin.New()
 }
