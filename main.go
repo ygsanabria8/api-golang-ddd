@@ -1,7 +1,10 @@
 package main
 
-import "fmt"
+import (
+	"api.ddd/src/fxmodule"
+	"go.uber.org/fx"
+)
 
 func main() {
-	fmt.Println("Hello World")
+	fx.New(fxmodule.ApiModule).Run()
 }
