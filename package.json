@@ -1,0 +1,19 @@
+{
+  "name": "api-golang-ddd",
+  "version": "1.0.0",
+  "repository": "git@github.com:ygsanabria8/api-golang-ddd.git",
+  "author": "Yesid S. <yesid251@hotmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "commit": "cz"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  },
+  "dependencies": {
+    "commitizen": "^4.3.0",
+    "cz-conventional-changelog": "^3.3.0"
+  }
+}
