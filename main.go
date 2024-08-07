@@ -9,7 +9,7 @@ import (
 func main() {
 	logger := server.ProvideLogger().GetFxLogger()
 	fx.New(
-		fxmodule.ApiModule,
+		fxmodule.InitModule,
 		fx.Logger(logger),
 	).Run()
 }

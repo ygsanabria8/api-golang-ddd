@@ -5,9 +5,9 @@ import (
 	"go.uber.org/fx"
 )
 
-var ApiModule = fx.Options(
+var ApiModule = fx.Module(
+	"Api Module",
 	fx.Provide(server.ProvideLogger),
 	fx.Provide(server.ProvideGinServer),
 	fx.Invoke(server.ConfigureCors),
-	fx.Invoke(server.StartGinServer),
 )
