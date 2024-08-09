@@ -2,16 +2,19 @@ run:
 	@echo "  >  Running Api DDD..."
 	go run main.go
 
-run-watch:
+run_watch:
 	@echo "  >  Watching Api DDD..."
 	air
 
-generate:
-	@echo "  >  Building .proto..."
+generate_all_pb: generate_api_pb
+
+generate_api_pb:
+	@echo "  >  Building Api .proto..."
 	protoc \
-		-I=src/api/proto/ \
-		--go_opt=paths=source_relative src/api/proto/*.proto \
-		--go_out=src/api/proto/pb
+	-I src/api/proto/ \
+	--go_opt=paths=source_relative \
+	--go_out=src/api/proto/pb src/api/proto/*.proto \
+
 
 test:
 	@echo "  >  Running Tests ..."
