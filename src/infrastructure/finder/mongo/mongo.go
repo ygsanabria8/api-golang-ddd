@@ -1,4 +1,4 @@
-package mongo
+package finder
 
 import (
 	"api.ddd/src/domain/aggregates"
