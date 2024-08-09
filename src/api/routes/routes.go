@@ -12,14 +12,14 @@ func ConfigureRoutes(
 ) {
 	logger.Info("Setting up routes")
 
-	api := server.Group("/api/ms-example/v1")
+	api := server.Group("/api/ms-user/v1")
 
-	example := api.Group("/example")
+	user := api.Group("/user")
 	{
-		example.POST("", controller.CreateExample)
-		example.GET(":exampleId", controller.GetExample)
-		example.GET("", controller.GetAllExamples)
-		example.DELETE(":exampleId", controller.DeleteExample)
-		example.PATCH("", controller.UpdateExample)
+		user.POST("", controller.CreateUser)
+		user.GET(":userId", controller.GetUser)
+		user.GET("", controller.GetAllUsers)
+		user.DELETE(":userId", controller.DeleteUser)
+		user.PATCH("", controller.UpdateUser)
 	}
 }
