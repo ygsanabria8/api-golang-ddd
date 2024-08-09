@@ -52,13 +52,11 @@ func (m *DispatcherMemory) RegisterHandler(handler IHandler, message interface{}
 }
 
 // Send allow to execute handler methods to specific
-// handler that was registered previously and validate if it exist
+// handler that was registered previously and validate if it exists
 func (m *DispatcherMemory) Send(message *Message) (interface{}, error) {
 
 	handlerName := message.GetMessageString()
-
 	handlers, exist := m.handlers[message.GetMessageString()]
-
 	if !exist {
 		m.logger.Warnf("Error Executing Handler: %s", handlerName)
 		return nil, errors.New("handler was not registered")

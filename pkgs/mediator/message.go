@@ -7,7 +7,7 @@ type IMessage interface {
 	GetMessageString() string
 }
 
-// Message that has a interface with data
+// Message that has an interface with data
 // And name of that interface
 type Message struct {
 	message       interface{}
