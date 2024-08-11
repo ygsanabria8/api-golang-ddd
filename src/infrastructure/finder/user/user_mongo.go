@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func (f Finder) GetUserById(userId string) (*aggregates.User, error) {
+func (f *MongoUserFinder) GetUserById(userId string) (*aggregates.User, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 50*time.Second)
 	defer cancel()
 
@@ -28,7 +28,7 @@ func (f Finder) GetUserById(userId string) (*aggregates.User, error) {
 	return user, nil
 }
 
-func (f Finder) GetAllUsers() ([]*aggregates.User, error) {
+func (f *MongoUserFinder) GetAllUsers() ([]*aggregates.User, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 50*time.Second)
 	defer cancel()
 

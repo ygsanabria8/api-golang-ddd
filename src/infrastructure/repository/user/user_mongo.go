@@ -10,13 +10,13 @@ import (
 	"time"
 )
 
-func (r *Repository) CreateUser(user *aggregates.User) (*aggregates.User, error) {
+func (r *MongoUserRepository) CreateUser(user *aggregates.User) (*aggregates.User, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 50*time.Second)
 	defer cancel()
 
 	user.Id = uuid.New().String()
 	userJson, _ := json.Marshal(user)
-	r.logger.Infof("Saving User Mongo: " + string(userJson))
+	r.logger.Infof("Saving User: " + string(userJson))
 
 	collection := r.database.Database("api-golang-ddd").Collection("user")
 	_, err := collection.InsertOne(ctx, user)
@@ -27,12 +27,12 @@ func (r *Repository) CreateUser(user *aggregates.User) (*aggregates.User, error)
 	return user, nil
 }
 
-func (r *Repository) DeleteUser(userId string) error {
+func (r *MongoUserRepository) DeleteUser(userId string) error {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 50*time.Second)
 	defer cancel()
 
-	r.logger.Infof("Deleting User Mongo: " + userId)
+	r.logger.Infof("Deleting User: " + userId)
 	filter := bson.M{
 		"_id": userId,
 	}
@@ -40,7 +40,7 @@ func (r *Repository) DeleteUser(userId string) error {
 	collection := r.database.Database("api-golang-ddd").Collection("user")
 	result, err := collection.DeleteOne(ctx, filter)
 	if err != nil {
-		r.logger.Errorw("Error User User", err)
+		r.logger.Errorw("Error Deleting User", err)
 		return errors.New("some error happens deleting into database")
 	}
 
@@ -51,7 +51,7 @@ func (r *Repository) DeleteUser(userId string) error {
 	return nil
 }
 
-func (r *Repository) UpdateUser(user *aggregates.User) (*aggregates.User, error) {
+func (r *MongoUserRepository) UpdateUser(user *aggregates.User) (*aggregates.User, error) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 50*time.Second)
 	defer cancel()
