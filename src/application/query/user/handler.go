@@ -18,3 +18,15 @@ func (h *GetUserByIdQueryHandler) Handler(message *mediator.Message) (interface{
 
 	return exampleDb, nil
 }
+
+func (h *GetAllUsersQueryHandler) Handler(message *mediator.Message) (interface{}, error) {
+
+	h.logger.Info("Invoked GetAllUsersQueryHandler")
+
+	examplesDb, err := h.service.GetAllUsers()
+	if err != nil {
+		return nil, err
+	}
+
+	return examplesDb, nil
+}

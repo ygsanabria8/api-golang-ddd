@@ -48,7 +48,17 @@ func (c *Controller) GetUserById(ctx *gin.Context) {
 
 func (c *Controller) GetAllUsers(ctx *gin.Context) {
 	c.logger.Infof("Invoked GetAllUsers Controller")
-	ctx.JSON(http.StatusOK, gin.H{})
+
+	queryRequest := &query.GetAllUsersQuery{}
+	message := mediator.CreateMessage(queryRequest)
+
+	response, err := c.mediator.Send(message)
+	if err != nil {
+		_ = ctx.Error(err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, response)
 }
 
 func (c *Controller) DeleteUser(ctx *gin.Context) {

@@ -23,3 +23,22 @@ func NewGetUserByIdQueryHandler(
 		service: service,
 	}
 }
+
+type GetAllUsersQuery struct {
+	Id string
+}
+
+type GetAllUsersQueryHandler struct {
+	logger  *server.Logger
+	service interfaces.IUserService
+}
+
+func NewGetAllUsersQueryHandler(
+	logger *server.Logger,
+	service interfaces.IUserService,
+) *GetAllUsersQueryHandler {
+	return &GetAllUsersQueryHandler{
+		logger:  logger,
+		service: service,
+	}
+}

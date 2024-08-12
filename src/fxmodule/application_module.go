@@ -15,5 +15,6 @@ var ApplicationModule = fx.Module(
 	),
 	fx.Provide(
 		query.NewGetUserByIdQueryHandler,
+		query.NewGetAllUsersQueryHandler,
 	),
 )

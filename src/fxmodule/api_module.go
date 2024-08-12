@@ -27,9 +27,11 @@ func RegisterHandlers(
 	updateUserCommandHandler *command.UpdateUserCommandHandler,
 	deleteUserCommandHandler *command.DeleteUserCommandHandler,
 	getUserByIdQueryHandler *query.GetUserByIdQueryHandler,
+	getAllUsersQueryHandler *query.GetAllUsersQueryHandler,
 ) {
 	_ = dispatcher.RegisterHandler(createUserCommandHandler, &command.CreateUserCommand{})
 	_ = dispatcher.RegisterHandler(updateUserCommandHandler, &command.UpdateUserCommand{})
 	_ = dispatcher.RegisterHandler(deleteUserCommandHandler, &command.DeleteUserCommand{})
 	_ = dispatcher.RegisterHandler(getUserByIdQueryHandler, &query.GetUserByIdQuery{})
+	_ = dispatcher.RegisterHandler(getAllUsersQueryHandler, &query.GetAllUsersQuery{})
 }
