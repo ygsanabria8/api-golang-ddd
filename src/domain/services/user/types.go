@@ -7,10 +7,10 @@ import (
 
 type UserService struct {
 	fx.In
-	noSqlRepository interfaces.IUserRepository `name:"NoSqlRepository"`
-	noSqlFinder     interfaces.IUserFinder     `name:"NoSqlFinder"`
-	sqlRepository   interfaces.IUserRepository `name:"SqlRepository"`
-	sqlFinder       interfaces.IUserFinder     `name:"SqlFinder"`
+	NoSqlRepository interfaces.IUserRepository `name:"NoSqlRepository"`
+	NoSqlFinder     interfaces.IUserFinder     `name:"NoSqlFinder"`
+	SqlRepository   interfaces.IUserRepository `name:"SqlRepository"`
+	SqlFinder       interfaces.IUserFinder     `name:"SqlFinder"`
 }
 
 func NewUserService(
