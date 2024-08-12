@@ -1,6 +1,9 @@
 package controllers
 
 import (
+	"api.ddd/pkgs/mediator"
+	command "api.ddd/src/application/command/user"
+	"errors"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -8,7 +11,21 @@ import (
 func (c *Controller) CreateUser(ctx *gin.Context) {
 
 	c.logger.Infof("Invoked CreateUser Controller")
-	ctx.JSON(http.StatusOK, gin.H{})
+
+	commandRequest := &command.CreateUserCommand{}
+	if err := ctx.ShouldBindJSON(&commandRequest); err != nil {
+		c.logger.Errorw("Error Body Deserialization", err)
+		_ = ctx.Error(errors.New("please check your body request"))
+		return
+	}
+
+	message := mediator.CreateMessage(commandRequest)
+	response, err := c.mediator.Send(message)
+	if err != nil {
+		_ = ctx.Error(err)
+		return
+	}
+	ctx.JSON(http.StatusOK, response)
 }
 
 func (c *Controller) GetUser(ctx *gin.Context) {

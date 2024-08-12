@@ -8,6 +8,7 @@ import (
 var InitModule = fx.Options(
 	DomainModule,
 	InfrastructureModule,
+	ApplicationModule,
 	ApiModule,
 	fx.Invoke(server.StartGinServer),
 )
