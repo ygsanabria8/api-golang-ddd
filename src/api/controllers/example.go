@@ -43,7 +43,19 @@ func (c *Controller) GetAllUsers(ctx *gin.Context) {
 func (c *Controller) DeleteUser(ctx *gin.Context) {
 
 	c.logger.Infof("Invoked DeleteUser Controller")
-	ctx.JSON(http.StatusOK, gin.H{})
+
+	query := &command.DeleteUserCommand{
+		Id: ctx.Param("userId"),
+	}
+
+	message := mediator.CreateMessage(query)
+	response, err := c.mediator.Send(message)
+	if err != nil {
+		_ = ctx.Error(err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, response)
 }
 
 func (c *Controller) UpdateUser(ctx *gin.Context) {

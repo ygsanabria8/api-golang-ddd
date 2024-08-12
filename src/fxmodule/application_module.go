@@ -10,5 +10,6 @@ var ApplicationModule = fx.Module(
 	fx.Provide(
 		command.NewCreateUserCommandHandler,
 		command.NewUpdateUserCommandHandler,
+		command.NewDeleteUserCommandHandler,
 	),
 )

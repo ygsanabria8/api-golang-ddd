@@ -24,7 +24,9 @@ func RegisterHandlers(
 	dispatcher mediator.IDispatcher,
 	createUserCommandHandler *command.CreateUserCommandHandler,
 	updateUserCommandHandler *command.UpdateUserCommandHandler,
+	deleteUserCommandHandler *command.DeleteUserCommandHandler,
 ) {
 	_ = dispatcher.RegisterHandler(createUserCommandHandler, &command.CreateUserCommand{})
 	_ = dispatcher.RegisterHandler(updateUserCommandHandler, &command.UpdateUserCommand{})
+	_ = dispatcher.RegisterHandler(deleteUserCommandHandler, &command.DeleteUserCommand{})
 }

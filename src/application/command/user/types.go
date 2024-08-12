@@ -49,3 +49,22 @@ func NewUpdateUserCommandHandler(
 		service: service,
 	}
 }
+
+type DeleteUserCommand struct {
+	Id string
+}
+
+type DeleteUserCommandHandler struct {
+	logger  *server.Logger
+	service interfaces.IUserService
+}
+
+func NewDeleteUserCommandHandler(
+	logger *server.Logger,
+	service interfaces.IUserService,
+) *DeleteUserCommandHandler {
+	return &DeleteUserCommandHandler{
+		logger:  logger,
+		service: service,
+	}
+}

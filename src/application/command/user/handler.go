@@ -49,3 +49,18 @@ func (h *UpdateUserCommandHandler) Handler(message *mediator.Message) (interface
 
 	return updatedUser, nil
 }
+
+func (h *DeleteUserCommandHandler) Handler(message *mediator.Message) (interface{}, error) {
+
+	command := message.GetMessage().(*DeleteUserCommand)
+
+	commandJson, _ := json.Marshal(command)
+	h.logger.Info("Invoked DeleteUserCommandHandler: " + string(commandJson))
+
+	err := h.service.DeleteUser(command.Id)
+	if err != nil {
+		return nil, err
+	}
+
+	return command, nil
+}
