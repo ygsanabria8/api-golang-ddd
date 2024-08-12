@@ -4,10 +4,12 @@ import (
 	"api.ddd/src/api/server"
 	"api.ddd/src/domain/interfaces"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.uber.org/fx"
 	"gorm.io/gorm"
 )
 
 type MongoUserFinder struct {
+	fx.In
 	database *mongo.Client
 	logger   *server.Logger
 }
