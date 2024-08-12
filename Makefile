@@ -23,3 +23,7 @@ test:
 mocks:
 	@echo "  >  Generating Mocks..."
 	mockery --all
+
+commit:
+	@echo "  >  Making Commit..."
+	yarn commit
