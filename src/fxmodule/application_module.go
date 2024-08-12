@@ -9,5 +9,6 @@ var ApplicationModule = fx.Module(
 	"Application Module",
 	fx.Provide(
 		command.NewCreateUserCommandHandler,
+		command.NewUpdateUserCommandHandler,
 	),
 )

@@ -26,3 +26,26 @@ func NewCreateUserCommandHandler(
 		service: service,
 	}
 }
+
+type UpdateUserCommand struct {
+	Id       string
+	Name     string
+	Lastname string
+	Age      int32
+	Email    string
+}
+
+type UpdateUserCommandHandler struct {
+	logger  *server.Logger
+	service interfaces.IUserService
+}
+
+func NewUpdateUserCommandHandler(
+	logger *server.Logger,
+	service interfaces.IUserService,
+) *UpdateUserCommandHandler {
+	return &UpdateUserCommandHandler{
+		logger:  logger,
+		service: service,
+	}
+}

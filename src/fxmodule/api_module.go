@@ -23,6 +23,8 @@ var ApiModule = fx.Module(
 func RegisterHandlers(
 	dispatcher mediator.IDispatcher,
 	createUserCommandHandler *command.CreateUserCommandHandler,
+	updateUserCommandHandler *command.UpdateUserCommandHandler,
 ) {
 	_ = dispatcher.RegisterHandler(createUserCommandHandler, &command.CreateUserCommand{})
+	_ = dispatcher.RegisterHandler(updateUserCommandHandler, &command.UpdateUserCommand{})
 }

@@ -27,3 +27,25 @@ func (h *CreateUserCommandHandler) Handler(message *mediator.Message) (interface
 
 	return savedUser, nil
 }
+
+func (h *UpdateUserCommandHandler) Handler(message *mediator.Message) (interface{}, error) {
+
+	commandRequest := message.GetMessage().(*UpdateUserCommand)
+	commandJson, _ := json.Marshal(commandRequest)
+	h.logger.Info("Invoked UpdateUserCommandHandler: " + string(commandJson))
+
+	newUser := &aggregates.User{
+		Id:       commandRequest.Id,
+		Name:     commandRequest.Name,
+		Lastname: commandRequest.Lastname,
+		Age:      commandRequest.Age,
+		Email:    commandRequest.Email,
+	}
+
+	updatedUser, err := h.service.UpdateUser(newUser)
+	if err != nil {
+		return nil, err
+	}
+
+	return updatedUser, nil
+}

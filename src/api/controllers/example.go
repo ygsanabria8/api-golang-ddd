@@ -49,5 +49,19 @@ func (c *Controller) DeleteUser(ctx *gin.Context) {
 func (c *Controller) UpdateUser(ctx *gin.Context) {
 
 	c.logger.Infof("Invoked UpdateUser Controller")
-	ctx.JSON(http.StatusOK, gin.H{})
+
+	commandRequest := &command.UpdateUserCommand{}
+	if err := ctx.ShouldBindJSON(&commandRequest); err != nil {
+		c.logger.Errorw("Error Body Deserialization", err)
+		_ = ctx.Error(errors.New("please check your body request"))
+		return
+	}
+
+	message := mediator.CreateMessage(commandRequest)
+	response, err := c.mediator.Send(message)
+	if err != nil {
+		_ = ctx.Error(err)
+		return
+	}
+	ctx.JSON(http.StatusOK, response)
 }
