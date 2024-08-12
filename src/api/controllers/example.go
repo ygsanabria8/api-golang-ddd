@@ -3,13 +3,13 @@ package controllers
 import (
 	"api.ddd/pkgs/mediator"
 	command "api.ddd/src/application/command/user"
+	query "api.ddd/src/application/query/user"
 	"errors"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
 func (c *Controller) CreateUser(ctx *gin.Context) {
-
 	c.logger.Infof("Invoked CreateUser Controller")
 
 	commandRequest := &command.CreateUserCommand{}
@@ -28,27 +28,37 @@ func (c *Controller) CreateUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, response)
 }
 
-func (c *Controller) GetUser(ctx *gin.Context) {
-
+func (c *Controller) GetUserById(ctx *gin.Context) {
 	c.logger.Infof("Invoked GetUser Controller")
-	ctx.JSON(http.StatusOK, gin.H{})
+
+	queryRequest := &query.GetUserByIdQuery{
+		Id: ctx.Param("userId"),
+	}
+
+	message := mediator.CreateMessage(queryRequest)
+
+	response, err := c.mediator.Send(message)
+	if err != nil {
+		_ = ctx.Error(err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, response)
 }
 
 func (c *Controller) GetAllUsers(ctx *gin.Context) {
-
 	c.logger.Infof("Invoked GetAllUsers Controller")
 	ctx.JSON(http.StatusOK, gin.H{})
 }
 
 func (c *Controller) DeleteUser(ctx *gin.Context) {
-
 	c.logger.Infof("Invoked DeleteUser Controller")
 
-	query := &command.DeleteUserCommand{
+	commandRequest := &command.DeleteUserCommand{
 		Id: ctx.Param("userId"),
 	}
 
-	message := mediator.CreateMessage(query)
+	message := mediator.CreateMessage(commandRequest)
 	response, err := c.mediator.Send(message)
 	if err != nil {
 		_ = ctx.Error(err)
@@ -59,7 +69,6 @@ func (c *Controller) DeleteUser(ctx *gin.Context) {
 }
 
 func (c *Controller) UpdateUser(ctx *gin.Context) {
-
 	c.logger.Infof("Invoked UpdateUser Controller")
 
 	commandRequest := &command.UpdateUserCommand{}

@@ -17,7 +17,7 @@ func ConfigureRoutes(
 	user := api.Group("/user")
 	{
 		user.POST("", controller.CreateUser)
-		user.GET(":userId", controller.GetUser)
+		user.GET(":userId", controller.GetUserById)
 		user.GET("", controller.GetAllUsers)
 		user.DELETE(":userId", controller.DeleteUser)
 		user.PATCH("", controller.UpdateUser)

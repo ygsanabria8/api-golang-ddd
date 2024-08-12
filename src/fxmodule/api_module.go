@@ -6,6 +6,7 @@ import (
 	"api.ddd/src/api/routes"
 	"api.ddd/src/api/server"
 	command "api.ddd/src/application/command/user"
+	query "api.ddd/src/application/query/user"
 	"go.uber.org/fx"
 )
 
@@ -25,8 +26,10 @@ func RegisterHandlers(
 	createUserCommandHandler *command.CreateUserCommandHandler,
 	updateUserCommandHandler *command.UpdateUserCommandHandler,
 	deleteUserCommandHandler *command.DeleteUserCommandHandler,
+	getUserByIdQueryHandler *query.GetUserByIdQueryHandler,
 ) {
 	_ = dispatcher.RegisterHandler(createUserCommandHandler, &command.CreateUserCommand{})
 	_ = dispatcher.RegisterHandler(updateUserCommandHandler, &command.UpdateUserCommand{})
 	_ = dispatcher.RegisterHandler(deleteUserCommandHandler, &command.DeleteUserCommand{})
+	_ = dispatcher.RegisterHandler(getUserByIdQueryHandler, &query.GetUserByIdQuery{})
 }
