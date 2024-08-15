@@ -2,6 +2,7 @@ package repository
 
 import (
 	"api.ddd/src/domain/aggregates"
+	"api.ddd/src/infrastructure/utils"
 	"context"
 	"encoding/json"
 	"errors"
@@ -31,8 +32,15 @@ func (r *MongoUserRepository) DeleteUser(userId string) error {
 	defer cancel()
 
 	r.logger.Infof("Deleting User: " + userId)
+
+	id, err := utils.IsValidUUID(userId)
+	if err != nil {
+		r.logger.Errorw("Error Invalid UUID", err)
+		return errors.New("some error happens updating into database")
+	}
+
 	filter := bson.M{
-		"_id": userId,
+		"_id": id,
 	}
 
 	collection := r.database.Database("api-golang-ddd").Collection("user")
@@ -56,8 +64,15 @@ func (r *MongoUserRepository) UpdateUser(user *aggregates.User) (*aggregates.Use
 
 	productJson, _ := json.Marshal(user)
 	r.logger.Info("Updating User Mongo: " + string(productJson))
+
+	id, err := utils.IsValidUUID(user.Id)
+	if err != nil {
+		r.logger.Errorw("Error Invalid UUID", err)
+		return nil, errors.New("some error happens updating into database")
+	}
+
 	filter := bson.M{
-		"_id": user.Id,
+		"_id": id,
 	}
 
 	collection := r.database.Database("api-golang-ddd").Collection("user")

@@ -2,13 +2,13 @@ package repository
 
 import (
 	"api.ddd/src/domain/aggregates"
+	"api.ddd/src/infrastructure/utils"
 	"encoding/json"
 	"errors"
-	"github.com/google/uuid"
 )
 
 func (r *MySqlUserRepository) CreateUser(user *aggregates.User) (*aggregates.User, error) {
-	user.Id = uuid.New().String()
+	user.Id = utils.GetUUID()
 	userJson, _ := json.Marshal(user)
 	r.logger.Infof("Saving User: " + string(userJson))
 
