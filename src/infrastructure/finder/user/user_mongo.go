@@ -2,6 +2,7 @@ package finder
 
 import (
 	"api.ddd/src/domain/aggregates"
+	"api.ddd/src/infrastructure/utils"
 	"context"
 	"errors"
 	"go.mongodb.org/mongo-driver/bson"
@@ -15,8 +16,15 @@ func (f *MongoUserFinder) GetUserById(userId string) (*aggregates.User, error) {
 
 	f.logger.Info("Getting User: " + userId)
 	collection := f.database.Database("api-golang-ddd").Collection("user")
+
+	id, err := utils.IsValidUUID(userId)
+	if err != nil {
+		f.logger.Errorw("Error Invalid UUID", err)
+		return nil, errors.New("some error happens updating into database")
+	}
+
 	filter := bson.M{
-		"_id": userId,
+		"_id": id,
 	}
 
 	var user *aggregates.User
