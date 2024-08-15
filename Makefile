@@ -27,3 +27,11 @@ mocks:
 commit:
 	@echo "  >  Making Commit..."
 	yarn commit
+
+build:
+	@echo "  >  Building Ap..."
+	go build
+
+install:
+	@echo "  >  Installing Dependencies..."
+	go get .
