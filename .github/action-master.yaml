@@ -1,0 +1,26 @@
+name: CD Action
+
+on:
+  push:
+    branches: ['main']
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  Build_Push_Image_GitHub:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Login To Registry (GitHub)
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GH_TOKEN }}
+
+      - name: Build and push
+        run: |
+          docker build -f .docker/Dockerfile -t ${{ env.REGISTRY }}/${{ github.actor }}/${{ vars.APP_DEV_NAME }}:${{ github.run_number }}  .
+          docker push ${{ env.REGISTRY }}/${{ github.actor }}/${{ vars.APP_DEV_NAME }}:${{ github.run_number }}
