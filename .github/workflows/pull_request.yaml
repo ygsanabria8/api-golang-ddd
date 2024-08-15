@@ -2,8 +2,8 @@ name: CI Action
 
 on:
   pull_request:
-    types: ['edited', 'synchronize', 'reopened']
-    branches: ['main', 'develop']
+    types: ['opened', 'reopened', 'edited', 'synchronize']
+    branches: ['main']
 
 jobs:
   Build_Project:
