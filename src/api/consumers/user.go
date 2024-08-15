@@ -1,11 +1,11 @@
 package consumers
 
 import (
-	"api.ddd/pkgs/message_bus"
+	"api.ddd/pkgs/message_bus/utils"
 	"api.ddd/src/domain/events"
 )
 
-func (e *CreatedUserEventMessage) OnMessage(event *message_bus.Event) {
+func (e *CreatedUserEventMessage) OnMessage(event *utils.Event) {
 	e.logger.Infof("Invoked CreatedUserEventMessage Consumer")
 
 	var message *events.CreatedUserEvent
@@ -18,7 +18,7 @@ func (e *CreatedUserEventMessage) OnMessage(event *message_bus.Event) {
 	e.logger.Infow("CreatedUserEventMessage", message.User)
 }
 
-func (e *UpdatedUserEventMessage) OnMessage(event *message_bus.Event) {
+func (e *UpdatedUserEventMessage) OnMessage(event *utils.Event) {
 	e.logger.Infof("Invoked CreatedUserEventMessage Consumer")
 
 	var message *events.UpdatedUserEvent
@@ -31,7 +31,7 @@ func (e *UpdatedUserEventMessage) OnMessage(event *message_bus.Event) {
 	e.logger.Infow("UpdatedUserEventMessage", message.User)
 }
 
-func (e *DeletedUserEventMessage) OnMessage(event *message_bus.Event) {
+func (e *DeletedUserEventMessage) OnMessage(event *utils.Event) {
 	e.logger.Infof("Invoked CreatedUserEventMessage Consumer")
 
 	var message *events.DeletedUserEvent

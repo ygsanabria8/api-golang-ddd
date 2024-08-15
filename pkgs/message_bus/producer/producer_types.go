@@ -1,11 +1,12 @@
-package message_bus
+package producer
 
 import (
+	"api.ddd/pkgs/message_bus/utils"
 	"github.com/IBM/sarama"
 	"go.uber.org/zap"
 )
 
-type ClientProducer struct {
+type Client struct {
 	Producers []*Producer
 	Client    sarama.AsyncProducer
 	Logger    *zap.SugaredLogger
@@ -17,5 +18,5 @@ type Producer struct {
 }
 
 type IProducer interface {
-	SendMessage(eventType *Event)
+	SendMessage(eventType *utils.Event)
 }

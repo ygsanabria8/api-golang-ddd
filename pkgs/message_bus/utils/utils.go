@@ -1,4 +1,4 @@
-package message_bus
+package utils
 
 import (
 	"github.com/google/uuid"

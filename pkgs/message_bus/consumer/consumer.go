@@ -1,6 +1,7 @@
-package message_bus
+package consumer
 
 import (
+	"api.ddd/pkgs/message_bus/utils"
 	"context"
 	"encoding/json"
 	"errors"
@@ -8,7 +9,7 @@ import (
 )
 
 // SetUpConsumer start listener to pool message from kafka
-func (c *ClientConsumer) SetUpConsumer() {
+func (c *Client) SetUpConsumer() {
 	c.Logger.Infof("Setting Up Consumer Listener")
 	go func() {
 		for {
@@ -21,7 +22,7 @@ func (c *ClientConsumer) SetUpConsumer() {
 }
 
 // GetTopics return a list's topics registered
-func (c *ClientConsumer) GetTopics() []string {
+func (c *Client) GetTopics() []string {
 	var topics []string
 	for _, consumer := range c.Consumers {
 		topics = append(topics, consumer.Topic)
@@ -30,7 +31,7 @@ func (c *ClientConsumer) GetTopics() []string {
 }
 
 // GetHandlerByTopic get a function that will e executed to a specific topic
-func (c *ClientConsumer) GetHandlerByTopic(topic string) (IEventHandler, error) {
+func (c *Client) GetHandlerByTopic(topic string) (IEventHandler, error) {
 	for _, consumer := range c.Consumers {
 		if consumer.Topic == topic {
 			return consumer.Handler, nil
@@ -40,8 +41,8 @@ func (c *ClientConsumer) GetHandlerByTopic(topic string) (IEventHandler, error) 
 }
 
 // DecodeEvent receive message in bytes and return and object with the message
-func (c *ClientConsumer) DecodeEvent(bytes []byte) (*Event, error) {
-	event := &Event{}
+func (c *Client) DecodeEvent(bytes []byte) (*utils.Event, error) {
+	event := &utils.Event{}
 	err := json.Unmarshal(bytes, event)
 	if err != nil {
 		return nil, err
@@ -50,7 +51,7 @@ func (c *ClientConsumer) DecodeEvent(bytes []byte) (*Event, error) {
 }
 
 // ConsumeClaim will be executed to process each messages from de consumer
-func (c *ClientConsumer) ConsumeClaim(session sarama.ConsumerGroupSession, claim sarama.ConsumerGroupClaim) error {
+func (c *Client) ConsumeClaim(session sarama.ConsumerGroupSession, claim sarama.ConsumerGroupClaim) error {
 	for message := range claim.Messages() {
 		handler, err := c.GetHandlerByTopic(message.Topic)
 		if err != nil {
@@ -70,11 +71,11 @@ func (c *ClientConsumer) ConsumeClaim(session sarama.ConsumerGroupSession, claim
 }
 
 // Setup will be executed before consumer start consuming messages
-func (c *ClientConsumer) Setup(sarama.ConsumerGroupSession) error {
+func (c *Client) Setup(sarama.ConsumerGroupSession) error {
 	return nil
 }
 
 // Cleanup will be executed after consumer have consumed messages
-func (c *ClientConsumer) Cleanup(sarama.ConsumerGroupSession) error {
+func (c *Client) Cleanup(sarama.ConsumerGroupSession) error {
 	return nil
 }

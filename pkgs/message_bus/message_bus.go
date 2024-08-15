@@ -2,11 +2,14 @@ package message_bus
 
 import (
 	"api.ddd/pkgs/mediator"
+	"api.ddd/pkgs/message_bus/consumer"
+	"api.ddd/pkgs/message_bus/producer"
+	"api.ddd/pkgs/message_bus/utils"
 	"github.com/IBM/sarama"
 )
 
 func NewMessageBus(config *Configuration) (IMessageBus, error) {
-	logger := NewLogger()
+	logger := utils.NewLogger()
 	producerClient, err := sarama.NewAsyncProducer(config.Hosts, config.SaramaConfig)
 	if err != nil {
 		logger.Warnw("Failed To Start Sarama Producer", err)
@@ -23,41 +26,41 @@ func NewMessageBus(config *Configuration) (IMessageBus, error) {
 		consumerClient: consumerClient,
 		producerClient: producerClient,
 		logger:         logger,
-		consumers:      make([]*Consumer, 0),
-		producers:      make([]*Producer, 0),
+		consumers:      make([]*consumer.Consumer, 0),
+		producers:      make([]*producer.Producer, 0),
 	}
 
 	return messageBus, nil
 }
 
 func (m *MessageBus) WitProducer(topic string, eventType interface{}) IMessageBus {
-	producer := &Producer{
+	newProducer := &producer.Producer{
 		Topic:     topic,
 		EventType: mediator.TypeOf(eventType),
 	}
-	m.producers = append(m.producers, producer)
+	m.producers = append(m.producers, newProducer)
 	return m
 }
 
 // WithConsumer register a consumer to pool messages
-func (m *MessageBus) WithConsumer(topic string, handler IEventHandler) IMessageBus {
-	consumer := &Consumer{
+func (m *MessageBus) WithConsumer(topic string, handler consumer.IEventHandler) IMessageBus {
+	newConsumer := &consumer.Consumer{
 		Topic:   topic,
 		Handler: handler,
 	}
-	m.consumers = append(m.consumers, consumer)
+	m.consumers = append(m.consumers, newConsumer)
 	return m
 }
 
 // Build create final user instance
 func (m *MessageBus) Build() IMessageBusClient {
-	consumerClient := &ClientConsumer{
+	consumerClient := &consumer.Client{
 		Client:    m.consumerClient,
 		Logger:    m.logger,
 		Consumers: m.consumers,
 	}
 
-	producerClient := &ClientProducer{
+	producerClient := &producer.Client{
 		Client:    m.producerClient,
 		Logger:    m.logger,
 		Producers: m.producers,
@@ -72,6 +75,6 @@ func (m *MessageBus) Build() IMessageBusClient {
 	}
 }
 
-func (m MessageBusClient) SendMessage(eventType *Event) {
+func (m MessageBusClient) SendMessage(eventType *utils.Event) {
 	m.producerClient.SendMessage(eventType)
 }

@@ -1,4 +1,4 @@
-package message_bus
+package utils
 
 import (
 	"go.uber.org/zap"
