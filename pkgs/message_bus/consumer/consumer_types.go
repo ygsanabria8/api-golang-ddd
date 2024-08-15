@@ -1,11 +1,12 @@
-package message_bus
+package consumer
 
 import (
+	"api.ddd/pkgs/message_bus/utils"
 	"github.com/IBM/sarama"
 	"go.uber.org/zap"
 )
 
-type ClientConsumer struct {
+type Client struct {
 	Consumers []*Consumer
 	Client    sarama.ConsumerGroup
 	Logger    *zap.SugaredLogger
@@ -18,7 +19,7 @@ type Consumer struct {
 
 // IEventHandler interface that execute when a message arrive
 type IEventHandler interface {
-	OnMessage(event *Event)
+	OnMessage(event *utils.Event)
 }
 
 type IConsumer interface {

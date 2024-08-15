@@ -1,13 +1,14 @@
-package message_bus
+package producer
 
 import (
 	"api.ddd/pkgs/mediator"
+	"api.ddd/pkgs/message_bus/utils"
 	"encoding/json"
 	"errors"
 	"github.com/IBM/sarama"
 )
 
-func (p *ClientProducer) FindTopicByProducer(eventType interface{}) (string, error) {
+func (p *Client) FindTopicByProducer(eventType interface{}) (string, error) {
 	eventTypeString := mediator.TypeOf(eventType)
 	for _, producer := range p.Producers {
 		if producer.EventType == eventTypeString {
@@ -17,7 +18,7 @@ func (p *ClientProducer) FindTopicByProducer(eventType interface{}) (string, err
 	return "", errors.New("consumer not found")
 }
 
-func (p *ClientProducer) SendMessage(eventType *Event) {
+func (p *Client) SendMessage(eventType *utils.Event) {
 	go func() {
 		topic, err := p.FindTopicByProducer(eventType.Message)
 		if err != nil {
