@@ -5,7 +5,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
 	"time"
 )
@@ -14,7 +13,6 @@ func (r *MongoUserRepository) CreateUser(user *aggregates.User) (*aggregates.Use
 	ctx, cancel := context.WithTimeout(context.Background(), 50*time.Second)
 	defer cancel()
 
-	user.Id = uuid.New().String()
 	userJson, _ := json.Marshal(user)
 	r.logger.Infof("Saving User: " + string(userJson))
 

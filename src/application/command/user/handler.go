@@ -30,16 +30,16 @@ func (h *CreateUserCommandHandler) Handler(message *mediator.Message) (interface
 
 func (h *UpdateUserCommandHandler) Handler(message *mediator.Message) (interface{}, error) {
 
-	commandRequest := message.GetMessage().(*UpdateUserCommand)
-	commandJson, _ := json.Marshal(commandRequest)
+	command := message.GetMessage().(*UpdateUserCommand)
+	commandJson, _ := json.Marshal(command)
 	h.logger.Info("Invoked UpdateUserCommandHandler: " + string(commandJson))
 
 	newUser := &aggregates.User{
-		Id:       commandRequest.Id,
-		Name:     commandRequest.Name,
-		Lastname: commandRequest.Lastname,
-		Age:      commandRequest.Age,
-		Email:    commandRequest.Email,
+		Id:       command.Id,
+		Name:     command.Name,
+		Lastname: command.Lastname,
+		Age:      command.Age,
+		Email:    command.Email,
 	}
 
 	updatedUser, err := h.service.UpdateUser(newUser)
