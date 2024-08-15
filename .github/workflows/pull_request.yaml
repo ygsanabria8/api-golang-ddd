@@ -23,7 +23,7 @@ jobs:
       - name: Build App
         run: make build
 
-  Run_Unite_Test:
+  Run_Unit_Test:
     needs: Build_Project
     runs-on: ubuntu-22.04
     steps:
