@@ -11,6 +11,7 @@ var InfrastructureModule = fx.Module(
 	"Infrastructure Module",
 	fx.Provide(register_services.ProvideMongoClient),
 	fx.Provide(register_services.ProvideSqlClient),
+	fx.Provide(register_services.ProvideKafkaConnection),
 	fx.Provide(
 		fx.Annotated{
 			Name:   "NoSqlFinder",
