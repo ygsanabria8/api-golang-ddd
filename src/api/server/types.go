@@ -10,8 +10,8 @@ type Configuration struct {
 
 type Server struct {
 	Port   string
-	Origin string
-	Header string
+	Origin []string
+	Header []string
 }
 
 type Mongo struct {

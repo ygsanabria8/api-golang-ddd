@@ -2,6 +2,7 @@ package server
 
 import (
 	"github.com/spf13/viper"
+	"strings"
 )
 
 func SetUpConfig(logger *Logger) *Configuration {
@@ -22,12 +23,18 @@ func SetUpConfig(logger *Logger) *Configuration {
 		panic(err.Error())
 	}
 
+	allowedHeaders := viper.GetString("SERVER_HEADER")
+	allowedOrigins := viper.GetString("SERVER_ORIGIN")
+
+	headersSlice := strings.Split(allowedHeaders, ",")
+	originsSlice := strings.Split(allowedOrigins, ",")
+
 	return &Configuration{
 		AppName: viper.GetString("appName"),
 		Server: &Server{
 			Port:   viper.GetString("server.port"),
-			Origin: viper.GetString("server.origin"),
-			Header: viper.GetString("server.header"),
+			Origin: originsSlice,
+			Header: headersSlice,
 		},
 		Mongo: &Mongo{
 			Host:     viper.GetString("MONGO_HOST"),
