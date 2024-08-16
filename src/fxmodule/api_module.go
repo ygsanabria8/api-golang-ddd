@@ -28,17 +28,17 @@ var ApiModule = fx.Module(
 )
 
 func ProvideMessageBusClient(
-	conn message_bus.IMessageBus,
+	conn message_bus.IMessageBus, config *server.Configuration,
 	createdUserEventMessage *consumers.CreatedUserEventMessage,
 	updatedUserEventMessage *consumers.UpdatedUserEventMessage,
 	deletedUserEventMessage *consumers.DeletedUserEventMessage,
 ) message_bus.IMessageBusClient {
 	return conn.
-		WithConsumer("created-user-event", createdUserEventMessage).
-		WithConsumer("updated-user-event", updatedUserEventMessage).
-		WithConsumer("deleted-user-event", deletedUserEventMessage).
-		WitProducer("created-user-event", &events.CreatedUserEvent{}).
-		WitProducer("updated-user-event", &events.UpdatedUserEvent{}).
-		WitProducer("deleted-user-event", &events.DeletedUserEvent{}).
+		WithConsumer(config.Kafka.Topics.CreatedUser, createdUserEventMessage).
+		WithConsumer(config.Kafka.Topics.UpdatedUser, updatedUserEventMessage).
+		WithConsumer(config.Kafka.Topics.DeletedUser, deletedUserEventMessage).
+		WitProducer(config.Kafka.Topics.CreatedUser, &events.CreatedUserEvent{}).
+		WitProducer(config.Kafka.Topics.UpdatedUser, &events.UpdatedUserEvent{}).
+		WitProducer(config.Kafka.Topics.DeletedUser, &events.DeletedUserEvent{}).
 		Build()
 }

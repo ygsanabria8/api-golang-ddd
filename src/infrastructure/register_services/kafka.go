@@ -6,18 +6,18 @@ import (
 	"github.com/IBM/sarama"
 )
 
-func ProvideKafkaConnection(logger *server.Logger) message_bus.IMessageBus {
+func ProvideKafkaConnection(logger *server.Logger, config *server.Configuration) message_bus.IMessageBus {
 	saramaConfig := sarama.NewConfig()
 	saramaConfig.Producer.Return.Successes = true
 	saramaConfig.Producer.RequiredAcks = sarama.WaitForAll
 
-	config := message_bus.Configuration{
-		Hosts:         []string{"127.0.0.1:9092"},
-		ConsumerGroup: "golang-api-ddd",
+	messageBusConfig := message_bus.Configuration{
+		Hosts:         []string{config.Kafka.Broker},
+		ConsumerGroup: config.Kafka.Group,
 		SaramaConfig:  saramaConfig,
 	}
 
-	conn, err := message_bus.NewMessageBus(&config)
+	conn, err := message_bus.NewMessageBus(&messageBusConfig)
 	if err != nil {
 		logger.Errorw("Error Creating Kafka Client", err)
 		panic(err)

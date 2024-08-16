@@ -11,22 +11,22 @@ func (h *GetUserByIdQueryHandler) Handler(message *mediator.Message) (interface{
 	commandJson, _ := json.Marshal(query)
 	h.logger.Info("Invoked GetUserByIdQueryHandler: " + string(commandJson))
 
-	exampleDb, err := h.service.GetUserById(query.Id)
+	userDb, err := h.service.GetUserById(query.Id)
 	if err != nil {
 		return nil, err
 	}
 
-	return exampleDb, nil
+	return userDb, nil
 }
 
 func (h *GetAllUsersQueryHandler) Handler(message *mediator.Message) (interface{}, error) {
 
 	h.logger.Info("Invoked GetAllUsersQueryHandler")
 
-	examplesDb, err := h.service.GetAllUsers()
+	usersDb, err := h.service.GetAllUsers()
 	if err != nil {
 		return nil, err
 	}
 
-	return examplesDb, nil
+	return usersDb, nil
 }

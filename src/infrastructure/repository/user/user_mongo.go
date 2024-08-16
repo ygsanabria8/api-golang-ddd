@@ -17,7 +17,7 @@ func (r *MongoUserRepository) CreateUser(user *aggregates.User) (*aggregates.Use
 	userJson, _ := json.Marshal(user)
 	r.logger.Infof("Saving User: " + string(userJson))
 
-	collection := r.database.Database("api-golang-ddd").Collection("user")
+	collection := r.database.Database(r.config.Mongo.Database).Collection(r.config.Mongo.Collections.User)
 	_, err := collection.InsertOne(ctx, user)
 	if err != nil {
 		r.logger.Errorw("Error in CreateMongoUser", err)
@@ -43,7 +43,7 @@ func (r *MongoUserRepository) DeleteUser(userId string) error {
 		"_id": id,
 	}
 
-	collection := r.database.Database("api-golang-ddd").Collection("user")
+	collection := r.database.Database(r.config.Mongo.Database).Collection(r.config.Mongo.Collections.User)
 	result, err := collection.DeleteOne(ctx, filter)
 	if err != nil {
 		r.logger.Errorw("Error Deleting User", err)
@@ -75,7 +75,7 @@ func (r *MongoUserRepository) UpdateUser(user *aggregates.User) (*aggregates.Use
 		"_id": id,
 	}
 
-	collection := r.database.Database("api-golang-ddd").Collection("user")
+	collection := r.database.Database(r.config.Mongo.Database).Collection(r.config.Mongo.Collections.User)
 	result, err := collection.ReplaceOne(ctx, filter, user)
 	if err != nil {
 		r.logger.Errorw("Error in Updating User", err)

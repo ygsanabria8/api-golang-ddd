@@ -15,7 +15,7 @@ func (f *MongoUserFinder) GetUserById(userId string) (*aggregates.User, error) {
 	defer cancel()
 
 	f.logger.Info("Getting User: " + userId)
-	collection := f.database.Database("api-golang-ddd").Collection("user")
+	collection := f.database.Database(f.config.Mongo.Database).Collection(f.config.Mongo.Collections.User)
 
 	id, err := utils.IsValidUUID(userId)
 	if err != nil {
@@ -41,7 +41,7 @@ func (f *MongoUserFinder) GetAllUsers() ([]*aggregates.User, error) {
 	defer cancel()
 
 	f.logger.Info("Getting All Users")
-	collection := f.database.Database("api-golang-ddd").Collection("user")
+	collection := f.database.Database(f.config.Mongo.Database).Collection(f.config.Mongo.Collections.User)
 
 	findOptions := options.Find()
 	filter := bson.M{}
