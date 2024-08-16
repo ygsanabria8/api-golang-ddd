@@ -6,6 +6,7 @@ import (
 )
 
 var InitModule = fx.Options(
+	fx.Provide(server.SetUpConfig),
 	DomainModule,
 	InfrastructureModule,
 	ApplicationModule,

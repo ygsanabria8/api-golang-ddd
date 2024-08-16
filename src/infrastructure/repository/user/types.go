@@ -10,15 +10,18 @@ import (
 type MongoUserRepository struct {
 	database *mongo.Client
 	logger   *server.Logger
+	config   *server.Configuration
 }
 
 func NewMongoUserRepository(
 	database *mongo.Client,
 	logger *server.Logger,
+	config *server.Configuration,
 ) interfaces.IUserRepository {
 	return &MongoUserRepository{
 		database: database,
 		logger:   logger,
+		config:   config,
 	}
 }
 

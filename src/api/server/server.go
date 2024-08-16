@@ -8,18 +8,18 @@ import (
 
 func StartGinServer(
 	lifecycle fx.Lifecycle, server *gin.Engine,
-	logger *Logger,
+	logger *Logger, config *Configuration,
 ) {
 	lifecycle.Append(fx.Hook{
 		OnStart: func(context.Context) error {
 			go func() {
 				server.Use(gin.Recovery())
-				err := server.Run("127.0.0.1:11000")
+				err := server.Run("127.0.0.1:" + config.Server.Port)
 				if err != nil {
 					logger.Fatalf("Error starting server: %s", err.Error())
 					//panic("Error starting server")
 				}
-				logger.Infof("Server started on port 11000")
+				logger.Infof("Server started on port " + config.Server.Port)
 			}()
 			return nil
 		},

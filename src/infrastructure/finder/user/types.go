@@ -12,15 +12,18 @@ type MongoUserFinder struct {
 	fx.In
 	database *mongo.Client
 	logger   *server.Logger
+	config   *server.Configuration
 }
 
 func NewMongoUserFinder(
 	database *mongo.Client,
 	logger *server.Logger,
+	config *server.Configuration,
 ) interfaces.IUserFinder {
 	return &MongoUserFinder{
 		database: database,
 		logger:   logger,
+		config:   config,
 	}
 }
 

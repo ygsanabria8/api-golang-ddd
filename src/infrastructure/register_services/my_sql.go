@@ -9,14 +9,14 @@ import (
 )
 
 // ProvideSqlClient Provide Sql Client Instance
-func ProvideSqlClient(logger *server.Logger) *gorm.DB {
+func ProvideSqlClient(logger *server.Logger, config *server.Configuration) *gorm.DB {
 	dsn := fmt.Sprintf(
 		"%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=True&loc=Local",
-		"admin",
-		"123456",
-		"127.0.0.1",
-		3306,
-		"user",
+		config.Sql.User,
+		config.Sql.Password,
+		config.Sql.Host,
+		config.Sql.Port,
+		config.Sql.DatabaseName,
 	)
 	client, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
