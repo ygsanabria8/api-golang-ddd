@@ -32,3 +32,6 @@ tmp
 
 # Ignore .ide folder created by JetBrains
 .idea
+
+# Ignore sonar folders
+.scannerwork

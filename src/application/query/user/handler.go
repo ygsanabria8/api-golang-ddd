@@ -1,4 +1,4 @@
-package finder
+package query
 
 import (
 	"api.ddd/pkgs/mediator"

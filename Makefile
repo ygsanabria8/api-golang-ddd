@@ -19,7 +19,15 @@ generate_api_pb:
 tests:
 	@echo "  >  Running Tests ..."
 	go clean -testcache
-	go test ./... -cover
+	go test -coverprofile=coverage.out ./...
+
+sonarqube_report:
+	@echo "  >  Uploading Sonarqube Report ..."
+	sonar-scanner \
+      -Dsonar.projectKey=api-golang-ddd \
+      -Dsonar.sources=. \
+      -Dsonar.host.url=http://127.0.0.1:9000 \
+      -Dsonar.token={YOUR_LOCAL_TOKEN}
 
 mocks:
 	@echo "  >  Generating Mocks..."
