@@ -36,24 +36,17 @@ func ProvideLogger() *Logger {
 	return logger
 }
 
-// GetGinLogger Get gin logger
-func (l Logger) GetGinLogger() *GinLogger {
-	return &GinLogger{
-		Logger: &l,
-	}
-}
-
-// GetFxLogger Get fx logger
-func (l Logger) GetFxLogger() *FxLogger {
-	return &FxLogger{
-		Logger: &l,
-	}
-}
-
 // NewSugaredLogger Generate a sugared logger
 func NewSugaredLogger(logger *zap.Logger) *Logger {
 	return &Logger{
 		SugaredLogger: logger.Sugar(),
+	}
+}
+
+// GetGinLogger Get gin logger
+func (l Logger) GetGinLogger() *GinLogger {
+	return &GinLogger{
+		Logger: &l,
 	}
 }
 
@@ -62,6 +55,13 @@ func (l GinLogger) Write(p []byte) (n int, err error) {
 	message := replacer.Replace(string(p))
 	l.Info(message)
 	return len(p), nil
+}
+
+// GetFxLogger Get fx logger
+func (l Logger) GetFxLogger() *FxLogger {
+	return &FxLogger{
+		Logger: &l,
+	}
 }
 
 // Printf Override fx method logger
