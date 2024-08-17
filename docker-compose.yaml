@@ -52,3 +52,8 @@ services:
       - KAFKA_CLUSTERS_0_NAME=local
       - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:29092
       - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper:2181
+
+  SonarQube:
+    image: sonarqube:latest
+    ports:
+      - "127.0.0.1:9000:9000"
