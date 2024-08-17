@@ -86,6 +86,67 @@ func TestGivenUserIdWhenCallGetUserByIdShouldReturnError(t *testing.T) {
 	NoSqlFinderMock.AssertNumberOfCalls(t, mockedMethod, 1)
 }
 
+func TestWhenCallGetAllUsersShouldReturnUsers(t *testing.T) {
+	// Arrange
+	CleanMocks()
+	expectedUsers := []*aggregates.User{
+		{
+			Id: "1",
+		},
+		{
+			Id: "2",
+		},
+	}
+	mockedMethod := "GetAllUsers"
+	NoSqlFinderMock.On(mockedMethod, mock.Anything).
+		Return(expectedUsers, nil)
+
+	service := &services.UserService{
+		NoSqlRepository: NoSqlRepositoryMock,
+		SqlFinder:       SqlFinderMock,
+		SqlRepository:   SqlRepositoryMock,
+		NoSqlFinder:     NoSqlFinderMock,
+		Kafka:           KafkaMock,
+		Logger:          loggerMock,
+	}
+
+	// Act
+	users, err := service.GetAllUsers()
+
+	// Assert
+	assert.NotNil(t, users)
+	assert.Nil(t, err)
+	assert.Equal(t, len(expectedUsers), len(users))
+	NoSqlFinderMock.AssertNumberOfCalls(t, mockedMethod, 1)
+}
+
+func TestWhenCallGetAllUsersShouldReturnError(t *testing.T) {
+	// Arrange
+	CleanMocks()
+	expectedError := errors.New("some error")
+	mockedMethod := "GetAllUsers"
+	NoSqlFinderMock.On(mockedMethod, mock.Anything).
+		Return(nil, expectedError)
+
+	service := &services.UserService{
+		NoSqlRepository: NoSqlRepositoryMock,
+		SqlFinder:       SqlFinderMock,
+		SqlRepository:   SqlRepositoryMock,
+		NoSqlFinder:     NoSqlFinderMock,
+		Kafka:           KafkaMock,
+		Logger:          loggerMock,
+	}
+
+	// Act
+	users, err := service.GetAllUsers()
+
+	// Assert
+	assert.Nil(t, users)
+	assert.NotNil(t, err)
+	assert.Equal(t, expectedError, err)
+	NoSqlFinderMock.AssertNumberOfCalls(t, mockedMethod, 1)
+}
+
 func TestGivenUserWhenCallCreateUserShouldReturnUser(t *testing.T) {
 	// Arrange
 	CleanMocks()
