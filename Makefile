@@ -16,8 +16,9 @@ generate_api_pb:
 	--go_out=src/api/proto/pb src/api/proto/*.proto \
 
 
-test:
+tests:
 	@echo "  >  Running Tests ..."
+	go clean -testcache
 	go test ./... -cover
 
 mocks:
@@ -29,7 +30,7 @@ commit:
 	yarn commit
 
 build:
-	@echo "  >  Building Ap..."
+	@echo "  >  Building App..."
 	go build
 
 install:
