@@ -22,10 +22,7 @@ func (s *UserService) CreateUser(user *aggregates.User) (*aggregates.User, error
 	event := events.NewCreatedUserEvent(userSaved)
 	s.Kafka.SendMessage(event)
 	go func() {
-		_, err := s.NoSqlRepository.CreateUser(userSaved)
-		if err != nil {
-			s.Logger.Errorw("Create", err)
-		}
+		_, _ = s.NoSqlRepository.CreateUser(userSaved)
 	}()
 	return userSaved, nil
 }
@@ -39,12 +36,10 @@ func (s *UserService) UpdateUser(user *aggregates.User) (*aggregates.User, error
 	event := events.NewUpdatedUserEvent(newUser)
 	s.Kafka.SendMessage(event)
 	go func() {
-		_, err := s.NoSqlRepository.UpdateUser(newUser)
-		if err != nil {
-			s.Logger.Errorw("Update", err)
-		}
+		_, _ = s.NoSqlRepository.UpdateUser(newUser)
 	}()
 	return newUser, nil
+
 }
 
 func (s *UserService) DeleteUser(userId string) error {
@@ -56,10 +51,7 @@ func (s *UserService) DeleteUser(userId string) error {
 	event := events.NewDeletedUserEvent(userId)
 	s.Kafka.SendMessage(event)
 	go func() {
-		err := s.NoSqlRepository.DeleteUser(userId)
-		if err != nil {
-			s.Logger.Errorw("Delete", err)
-		}
+		_ = s.NoSqlRepository.DeleteUser(userId)
 	}()
 	return nil
 }
