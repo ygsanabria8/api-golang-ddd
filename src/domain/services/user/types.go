@@ -18,7 +18,7 @@ type UserService struct {
 }
 
 func NewUserService(
-	service *UserService,
+	service UserService,
 ) interfaces.IUserService {
-	return service
+	return &service
 }

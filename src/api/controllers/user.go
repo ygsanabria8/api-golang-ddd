@@ -4,6 +4,7 @@ import (
 	"api.ddd/pkgs/mediator"
 	command "api.ddd/src/application/command/user"
 	query "api.ddd/src/application/query/user"
+	"api.ddd/src/utils"
 	"errors"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -31,9 +32,14 @@ func (c *Controller) CreateUser(ctx *gin.Context) {
 func (c *Controller) GetUserById(ctx *gin.Context) {
 	c.logger.Infof("Invoked GetUser Controller")
 
-	queryRequest := &query.GetUserByIdQuery{
-		Id: ctx.Param("userId"),
+	Id, err := utils.IsValidUUID(ctx.Param("userId"))
+	if err != nil {
+		c.logger.Errorw("Empty User Id")
+		_ = ctx.Error(errors.New("please check your path request"))
+		return
 	}
+
+	queryRequest := &query.GetUserByIdQuery{Id: Id}
 
 	message := mediator.CreateMessage(queryRequest)
 
@@ -64,9 +70,14 @@ func (c *Controller) GetAllUsers(ctx *gin.Context) {
 func (c *Controller) DeleteUser(ctx *gin.Context) {
 	c.logger.Infof("Invoked DeleteUser Controller")
 
-	commandRequest := &command.DeleteUserCommand{
-		Id: ctx.Param("userId"),
+	Id, err := utils.IsValidUUID(ctx.Param("userId"))
+	if err != nil {
+		c.logger.Errorw("Empty User Id")
+		_ = ctx.Error(errors.New("please check your path request"))
+		return
 	}
+
+	commandRequest := &command.DeleteUserCommand{Id: Id}
 
 	message := mediator.CreateMessage(commandRequest)
 	response, err := c.mediator.Send(message)

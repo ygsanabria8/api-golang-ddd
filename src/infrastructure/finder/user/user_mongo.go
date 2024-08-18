@@ -2,7 +2,7 @@ package finder
 
 import (
 	"api.ddd/src/domain/aggregates"
-	"api.ddd/src/infrastructure/utils"
+	"api.ddd/src/utils"
 	"context"
 	"errors"
 	"go.mongodb.org/mongo-driver/bson"
