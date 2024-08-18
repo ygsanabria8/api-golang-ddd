@@ -18,7 +18,7 @@ func TestGivenUserServiceDependenciesWhenCallNewUserServiceShouldReturnNewUserSe
 	SqlRepositoryMock := &domainmocks.IUserRepository{}
 	loggerMock := server.ProvideLogger()
 
-	serviceDependencies := &services.UserService{
+	serviceDependencies := services.UserService{
 		NoSqlRepository: NoSqlRepositoryMock,
 		SqlFinder:       SqlFinderMock,
 		SqlRepository:   SqlRepositoryMock,
