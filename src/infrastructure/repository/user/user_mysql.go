@@ -2,7 +2,7 @@ package repository
 
 import (
 	"api.ddd/src/domain/aggregates"
-	"api.ddd/src/infrastructure/utils"
+	"api.ddd/src/utils"
 	"encoding/json"
 	"errors"
 )
