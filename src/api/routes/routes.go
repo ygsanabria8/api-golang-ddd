@@ -7,7 +7,7 @@ import (
 )
 
 func ConfigureRoutes(
-	server *gin.Engine, controller *controllers.Controller,
+	server *gin.Engine, controller controllers.IController,
 	logger *server.Logger,
 ) {
 	logger.Info("Setting up routes")

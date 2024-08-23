@@ -2,6 +2,10 @@ package utils
 
 import "encoding/json"
 
+type IEvent interface {
+	GetMessage(obj interface{}) error
+}
+
 // Event basic structure that contains the topic to send event and event's data
 type Event struct {
 	Id      string      `json:"Id"`

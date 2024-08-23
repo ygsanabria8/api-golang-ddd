@@ -41,7 +41,7 @@ func (c *Client) GetHandlerByTopic(topic string) (IEventHandler, error) {
 }
 
 // DecodeEvent receive message in bytes and return and object with the message
-func (c *Client) DecodeEvent(bytes []byte) (*utils.Event, error) {
+func (c *Client) DecodeEvent(bytes []byte) (utils.IEvent, error) {
 	event := &utils.Event{}
 	err := json.Unmarshal(bytes, event)
 	if err != nil {

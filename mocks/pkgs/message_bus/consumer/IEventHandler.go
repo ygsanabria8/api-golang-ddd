@@ -21,7 +21,7 @@ func (_m *IEventHandler) EXPECT() *IEventHandler_Expecter {
 }
 
 // OnMessage provides a mock function with given fields: event
-func (_m *IEventHandler) OnMessage(event *utils.Event) {
+func (_m *IEventHandler) OnMessage(event utils.IEvent) {
 	_m.Called(event)
 }
 
@@ -31,14 +31,14 @@ type IEventHandler_OnMessage_Call struct {
 }
 
 // OnMessage is a helper method to define mock.On call
-//   - event *utils.Event
+//   - event utils.IEvent
 func (_e *IEventHandler_Expecter) OnMessage(event interface{}) *IEventHandler_OnMessage_Call {
 	return &IEventHandler_OnMessage_Call{Call: _e.mock.On("OnMessage", event)}
 }
 
-func (_c *IEventHandler_OnMessage_Call) Run(run func(event *utils.Event)) *IEventHandler_OnMessage_Call {
+func (_c *IEventHandler_OnMessage_Call) Run(run func(event utils.IEvent)) *IEventHandler_OnMessage_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(*utils.Event))
+		run(args[0].(utils.IEvent))
 	})
 	return _c
 }
@@ -48,7 +48,7 @@ func (_c *IEventHandler_OnMessage_Call) Return() *IEventHandler_OnMessage_Call {
 	return _c
 }
 
-func (_c *IEventHandler_OnMessage_Call) RunAndReturn(run func(*utils.Event)) *IEventHandler_OnMessage_Call {
+func (_c *IEventHandler_OnMessage_Call) RunAndReturn(run func(utils.IEvent)) *IEventHandler_OnMessage_Call {
 	_c.Call.Return(run)
 	return _c
 }
