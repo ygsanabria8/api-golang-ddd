@@ -1,18 +1,18 @@
-appName: "api-golang-ddd"
-server:
-  port: "11000"
+AppName: "api-golang-ddd"
+Server:
+  Port: "11000"
 
-mongo:
-  database: "api-golang-ddd"
-  collections:
-    user: "user"
+Mongo:
+  Database: "api-golang-ddd"
+  Collections:
+    User: "user"
 
-sql:
-  databaseName:   "user"
+Sql:
+  DatabaseName:   "user"
 
-kafka:
-  group: "api-golang-ddd"
-  topics:
-    createdUser: "created-user-event"
-    updatedUser: "updated-user-event"
-    deletedUser: "deleted-user-event"
+Kafka:
+  Group: "api-golang-ddd"
+  Topics:
+    CreatedUser: "created-user-event"
+    UpdatedUser: "updated-user-event"
+    DeletedUser: "deleted-user-event"
