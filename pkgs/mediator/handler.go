@@ -56,11 +56,28 @@ func (m *DispatcherMemory) RegisterHandler(handler IHandler, message interface{}
 func (m *DispatcherMemory) Send(message *Message) (interface{}, error) {
 
 	handlerName := message.GetMessageString()
-	handlers, exist := m.handlers[message.GetMessageString()]
+	handler, exist := m.handlers[message.GetMessageString()]
 	if !exist {
 		m.logger.Warnf("Error Executing Handler: %s", handlerName)
 		return nil, errors.New("handler was not registered")
 	}
 
-	return handlers.Handler(message)
+	responseChan := make(chan interface{})
+	errorChan := make(chan error)
+
+	defer close(responseChan)
+	defer close(errorChan)
+
+	go ExecuteHandler(handler, message, responseChan, errorChan)
+
+	response := <-responseChan
+	err := <-errorChan
+
+	return response, err
+}
+
+func ExecuteHandler(handler IHandler, message *Message, responseChan chan interface{}, errorChan chan error) {
+	response, err := handler.Handler(message)
+	responseChan <- response
+	errorChan <- err
 }
