@@ -23,44 +23,13 @@ func SetUpConfig(logger *Logger) *Configuration {
 		panic(err.Error())
 	}
 
-	allowedHeaders := viper.GetString("SERVER_HEADER")
-	allowedOrigins := viper.GetString("SERVER_ORIGIN")
-
-	headersSlice := strings.Split(allowedHeaders, ",")
-	originsSlice := strings.Split(allowedOrigins, ",")
-
-	return &Configuration{
-		AppName: viper.GetString("appName"),
-		Server: &Server{
-			Port:   viper.GetString("server.port"),
-			Origin: originsSlice,
-			Header: headersSlice,
-		},
-		Mongo: &Mongo{
-			Host:     viper.GetString("MONGO_HOST"),
-			Port:     viper.GetString("MONGO_PORT"),
-			User:     viper.GetString("MONGO_USER"),
-			Password: viper.GetString("MONGO_PASSWORD"),
-			Database: viper.GetString("mongo.database"),
-			Collections: &Collections{
-				User: viper.GetString("mongo.collections.user"),
-			},
-		},
-		Sql: &Sql{
-			Host:         viper.GetString("SQL_HOST"),
-			Port:         viper.GetInt("SQL_PORT"),
-			User:         viper.GetString("SQL_USER"),
-			Password:     viper.GetString("SQL_PASSWORD"),
-			DatabaseName: viper.GetString("sql.databaseName"),
-		},
-		Kafka: &Kafka{
-			Broker: viper.GetString("KAFKA_BROKER"),
-			Group:  viper.GetString("kafka.group"),
-			Topics: &Topics{
-				CreatedUser: viper.GetString("kafka.topics.createdUser"),
-				UpdatedUser: viper.GetString("kafka.topics.updatedUser"),
-				DeletedUser: viper.GetString("kafka.topics.deletedUser"),
-			},
-		},
+	var config Configuration
+	if err := viper.Unmarshal(&config); err != nil {
+		logger.Errorw("Error Decoding Config Object", err)
+		panic(err.Error())
 	}
+
+	config.Server.Header = strings.Split(viper.GetString("Header"), ",")
+	config.Server.Origin = strings.Split(viper.GetString("Origin"), ",")
+	return &config
 }
