@@ -16,11 +16,11 @@ func (e *CreatedUserEventMessage) OnMessage(event utils.IEvent) {
 		return
 	}
 
-	e.logger.Infow("CreatedUserEventMessage", message.User)
+	e.logger.Infoln(message.User)
 }
 
 func (e *UpdatedUserEventMessage) OnMessage(event utils.IEvent) {
-	e.logger.Infof("Invoked CreatedUserEventMessage Consumer")
+	e.logger.Infof("Invoked UpdatedUserEventMessage Consumer")
 
 	var message *events.UpdatedUserEvent
 	err := json.Unmarshal(event.GetMessage(), &message)
@@ -29,11 +29,11 @@ func (e *UpdatedUserEventMessage) OnMessage(event utils.IEvent) {
 		return
 	}
 
-	e.logger.Infow("UpdatedUserEventMessage", message.User)
+	e.logger.Infoln(message.User)
 }
 
 func (e *DeletedUserEventMessage) OnMessage(event utils.IEvent) {
-	e.logger.Infof("Invoked CreatedUserEventMessage Consumer")
+	e.logger.Infof("Invoked DeletedUserEventMessage Consumer")
 
 	var message *events.DeletedUserEvent
 	err := json.Unmarshal(event.GetMessage(), &message)
@@ -42,5 +42,5 @@ func (e *DeletedUserEventMessage) OnMessage(event utils.IEvent) {
 		return
 	}
 
-	e.logger.Infow("DeletedUserEventMessage", message.UserId)
+	e.logger.Infoln(message.UserId)
 }
