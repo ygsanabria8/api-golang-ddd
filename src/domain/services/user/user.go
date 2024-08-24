@@ -19,8 +19,7 @@ func (s *UserService) CreateUser(user *aggregates.User) (*aggregates.User, error
 		return nil, err
 	}
 
-	event := events.NewCreatedUserEvent(userSaved)
-	s.Kafka.SendMessage(event)
+	s.Kafka.SendMessage(events.NewCreatedUserEvent(userSaved))
 	go func() {
 		_, _ = s.NoSqlRepository.CreateUser(userSaved)
 	}()
@@ -33,8 +32,7 @@ func (s *UserService) UpdateUser(user *aggregates.User) (*aggregates.User, error
 		return nil, err
 	}
 
-	event := events.NewUpdatedUserEvent(newUser)
-	s.Kafka.SendMessage(event)
+	s.Kafka.SendMessage(events.NewUpdatedUserEvent(newUser))
 	go func() {
 		_, _ = s.NoSqlRepository.UpdateUser(newUser)
 	}()
@@ -48,8 +46,7 @@ func (s *UserService) DeleteUser(userId string) error {
 		return err
 	}
 
-	event := events.NewDeletedUserEvent(userId)
-	s.Kafka.SendMessage(event)
+	s.Kafka.SendMessage(events.NewDeletedUserEvent(userId))
 	go func() {
 		_ = s.NoSqlRepository.DeleteUser(userId)
 	}()

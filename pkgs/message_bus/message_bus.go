@@ -52,6 +52,12 @@ func (m *MessageBus) WithConsumer(topic string, handler consumer.IEventHandler) 
 	return m
 }
 
+// WithAppName Set app name to all consumer and producer
+func (m *MessageBus) WithAppName(appName string) IMessageBus {
+	m.appName = appName
+	return m
+}
+
 // Build create final user instance
 func (m *MessageBus) Build() IMessageBusClient {
 	consumerClient := &consumer.Client{
@@ -64,6 +70,7 @@ func (m *MessageBus) Build() IMessageBusClient {
 		Client:    m.producerClient,
 		Logger:    m.logger,
 		Producers: m.producers,
+		AppName:   m.appName,
 	}
 
 	// SetUp Consumers
@@ -75,6 +82,7 @@ func (m *MessageBus) Build() IMessageBusClient {
 	}
 }
 
-func (m MessageBusClient) SendMessage(eventType *utils.Event) {
-	m.producerClient.SendMessage(eventType)
+// SendMessage send data to de producer client
+func (m MessageBusClient) SendMessage(event interface{}) {
+	m.producerClient.SendMessage(event)
 }
