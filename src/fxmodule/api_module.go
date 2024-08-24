@@ -34,6 +34,7 @@ func ProvideMessageBusClient(
 	deletedUserEventMessage *consumers.DeletedUserEventMessage,
 ) message_bus.IMessageBusClient {
 	return conn.
+		WithAppName(config.AppName).
 		WithConsumer(config.Kafka.Topics.CreatedUser, createdUserEventMessage).
 		WithConsumer(config.Kafka.Topics.UpdatedUser, updatedUserEventMessage).
 		WithConsumer(config.Kafka.Topics.DeletedUser, deletedUserEventMessage).

@@ -3,7 +3,6 @@ package consumer
 import (
 	"api.ddd/pkgs/message_bus/utils"
 	"context"
-	"encoding/json"
 	"errors"
 	"github.com/IBM/sarama"
 )
@@ -40,16 +39,6 @@ func (c *Client) GetHandlerByTopic(topic string) (IEventHandler, error) {
 	return nil, errors.New("consumer not found")
 }
 
-// DecodeEvent receive message in bytes and return and object with the message
-func (c *Client) DecodeEvent(bytes []byte) (utils.IEvent, error) {
-	event := &utils.Event{}
-	err := json.Unmarshal(bytes, event)
-	if err != nil {
-		return nil, err
-	}
-	return event, nil
-}
-
 // ConsumeClaim will be executed to process each messages from de consumer
 func (c *Client) ConsumeClaim(session sarama.ConsumerGroupSession, claim sarama.ConsumerGroupClaim) error {
 	for message := range claim.Messages() {
@@ -59,12 +48,11 @@ func (c *Client) ConsumeClaim(session sarama.ConsumerGroupSession, claim sarama.
 			return errors.New("consumer was not registered")
 		}
 
-		event, err := c.DecodeEvent(message.Value)
-		if err != nil {
-			return err
-		}
-
-		go handler.OnMessage(event)
+		go handler.OnMessage(&utils.Event{
+			Headers: message.Headers,
+			Topic:   message.Topic,
+			Message: message.Value,
+		})
 		session.MarkMessage(message, "")
 	}
 	return nil

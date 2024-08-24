@@ -17,19 +17,68 @@ func (_m *IEvent) EXPECT() *IEvent_Expecter {
 	return &IEvent_Expecter{mock: &_m.Mock}
 }
 
-// GetMessage provides a mock function with given fields: obj
-func (_m *IEvent) GetMessage(obj interface{}) error {
-	ret := _m.Called(obj)
+// GetHeader provides a mock function with given fields:
+func (_m *IEvent) GetHeader() map[string]string {
+	ret := _m.Called()
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetHeader")
+	}
+
+	var r0 map[string]string
+	if rf, ok := ret.Get(0).(func() map[string]string); ok {
+		r0 = rf()
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(map[string]string)
+		}
+	}
+
+	return r0
+}
+
+// IEvent_GetHeader_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetHeader'
+type IEvent_GetHeader_Call struct {
+	*mock.Call
+}
+
+// GetHeader is a helper method to define mock.On call
+func (_e *IEvent_Expecter) GetHeader() *IEvent_GetHeader_Call {
+	return &IEvent_GetHeader_Call{Call: _e.mock.On("GetHeader")}
+}
+
+func (_c *IEvent_GetHeader_Call) Run(run func()) *IEvent_GetHeader_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run()
+	})
+	return _c
+}
+
+func (_c *IEvent_GetHeader_Call) Return(_a0 map[string]string) *IEvent_GetHeader_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *IEvent_GetHeader_Call) RunAndReturn(run func() map[string]string) *IEvent_GetHeader_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// GetMessage provides a mock function with given fields:
+func (_m *IEvent) GetMessage() []byte {
+	ret := _m.Called()
 
 	if len(ret) == 0 {
 		panic("no return value specified for GetMessage")
 	}
 
-	var r0 error
-	if rf, ok := ret.Get(0).(func(interface{}) error); ok {
-		r0 = rf(obj)
+	var r0 []byte
+	if rf, ok := ret.Get(0).(func() []byte); ok {
+		r0 = rf()
 	} else {
-		r0 = ret.Error(0)
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]byte)
+		}
 	}
 
 	return r0
@@ -41,24 +90,68 @@ type IEvent_GetMessage_Call struct {
 }
 
 // GetMessage is a helper method to define mock.On call
-//   - obj interface{}
-func (_e *IEvent_Expecter) GetMessage(obj interface{}) *IEvent_GetMessage_Call {
-	return &IEvent_GetMessage_Call{Call: _e.mock.On("GetMessage", obj)}
+func (_e *IEvent_Expecter) GetMessage() *IEvent_GetMessage_Call {
+	return &IEvent_GetMessage_Call{Call: _e.mock.On("GetMessage")}
 }
 
-func (_c *IEvent_GetMessage_Call) Run(run func(obj interface{})) *IEvent_GetMessage_Call {
+func (_c *IEvent_GetMessage_Call) Run(run func()) *IEvent_GetMessage_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(interface{}))
+		run()
 	})
 	return _c
 }
 
-func (_c *IEvent_GetMessage_Call) Return(_a0 error) *IEvent_GetMessage_Call {
+func (_c *IEvent_GetMessage_Call) Return(_a0 []byte) *IEvent_GetMessage_Call {
 	_c.Call.Return(_a0)
 	return _c
 }
 
-func (_c *IEvent_GetMessage_Call) RunAndReturn(run func(interface{}) error) *IEvent_GetMessage_Call {
+func (_c *IEvent_GetMessage_Call) RunAndReturn(run func() []byte) *IEvent_GetMessage_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// GetTopic provides a mock function with given fields:
+func (_m *IEvent) GetTopic() string {
+	ret := _m.Called()
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetTopic")
+	}
+
+	var r0 string
+	if rf, ok := ret.Get(0).(func() string); ok {
+		r0 = rf()
+	} else {
+		r0 = ret.Get(0).(string)
+	}
+
+	return r0
+}
+
+// IEvent_GetTopic_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetTopic'
+type IEvent_GetTopic_Call struct {
+	*mock.Call
+}
+
+// GetTopic is a helper method to define mock.On call
+func (_e *IEvent_Expecter) GetTopic() *IEvent_GetTopic_Call {
+	return &IEvent_GetTopic_Call{Call: _e.mock.On("GetTopic")}
+}
+
+func (_c *IEvent_GetTopic_Call) Run(run func()) *IEvent_GetTopic_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run()
+	})
+	return _c
+}
+
+func (_c *IEvent_GetTopic_Call) Return(_a0 string) *IEvent_GetTopic_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *IEvent_GetTopic_Call) RunAndReturn(run func() string) *IEvent_GetTopic_Call {
 	_c.Call.Return(run)
 	return _c
 }

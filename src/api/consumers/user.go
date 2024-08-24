@@ -3,13 +3,14 @@ package consumers
 import (
 	"api.ddd/pkgs/message_bus/utils"
 	"api.ddd/src/domain/events"
+	"encoding/json"
 )
 
 func (e *CreatedUserEventMessage) OnMessage(event utils.IEvent) {
 	e.logger.Infof("Invoked CreatedUserEventMessage Consumer")
 
 	var message *events.CreatedUserEvent
-	err := event.GetMessage(&message)
+	err := json.Unmarshal(event.GetMessage(), &message)
 	if err != nil {
 		e.logger.Infow("Error Getting Message", err)
 		return
@@ -22,7 +23,7 @@ func (e *UpdatedUserEventMessage) OnMessage(event utils.IEvent) {
 	e.logger.Infof("Invoked CreatedUserEventMessage Consumer")
 
 	var message *events.UpdatedUserEvent
-	err := event.GetMessage(&message)
+	err := json.Unmarshal(event.GetMessage(), &message)
 	if err != nil {
 		e.logger.Infow("Error Getting Message", err)
 		return
@@ -35,7 +36,7 @@ func (e *DeletedUserEventMessage) OnMessage(event utils.IEvent) {
 	e.logger.Infof("Invoked CreatedUserEventMessage Consumer")
 
 	var message *events.DeletedUserEvent
-	err := event.GetMessage(&message)
+	err := json.Unmarshal(event.GetMessage(), &message)
 	if err != nil {
 		e.logger.Infow("Error Getting Message", err)
 		return

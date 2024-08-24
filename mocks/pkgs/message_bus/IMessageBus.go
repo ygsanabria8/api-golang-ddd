@@ -118,6 +118,54 @@ func (_c *IMessageBus_WitProducer_Call) RunAndReturn(run func(string, interface{
 	return _c
 }
 
+// WithAppName provides a mock function with given fields: appName
+func (_m *IMessageBus) WithAppName(appName string) message_bus.IMessageBus {
+	ret := _m.Called(appName)
+
+	if len(ret) == 0 {
+		panic("no return value specified for WithAppName")
+	}
+
+	var r0 message_bus.IMessageBus
+	if rf, ok := ret.Get(0).(func(string) message_bus.IMessageBus); ok {
+		r0 = rf(appName)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(message_bus.IMessageBus)
+		}
+	}
+
+	return r0
+}
+
+// IMessageBus_WithAppName_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'WithAppName'
+type IMessageBus_WithAppName_Call struct {
+	*mock.Call
+}
+
+// WithAppName is a helper method to define mock.On call
+//   - appName string
+func (_e *IMessageBus_Expecter) WithAppName(appName interface{}) *IMessageBus_WithAppName_Call {
+	return &IMessageBus_WithAppName_Call{Call: _e.mock.On("WithAppName", appName)}
+}
+
+func (_c *IMessageBus_WithAppName_Call) Run(run func(appName string)) *IMessageBus_WithAppName_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(string))
+	})
+	return _c
+}
+
+func (_c *IMessageBus_WithAppName_Call) Return(_a0 message_bus.IMessageBus) *IMessageBus_WithAppName_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *IMessageBus_WithAppName_Call) RunAndReturn(run func(string) message_bus.IMessageBus) *IMessageBus_WithAppName_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // WithConsumer provides a mock function with given fields: topic, handler
 func (_m *IMessageBus) WithConsumer(topic string, handler consumer.IEventHandler) message_bus.IMessageBus {
 	ret := _m.Called(topic, handler)

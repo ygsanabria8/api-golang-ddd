@@ -2,13 +2,14 @@ package producer
 
 import (
 	"api.ddd/pkgs/mediator"
-	"api.ddd/pkgs/message_bus/utils"
 	"encoding/json"
 	"errors"
 	"github.com/IBM/sarama"
+	"github.com/google/uuid"
 )
 
-func (p *Client) FindTopicByProducer(eventType interface{}) (string, error) {
+// FindTopicByEventType return topic name where the message will be sended
+func (p *Client) FindTopicByEventType(eventType interface{}) (string, error) {
 	eventTypeString := mediator.TypeOf(eventType)
 	for _, producer := range p.Producers {
 		if producer.EventType == eventTypeString {
@@ -18,15 +19,16 @@ func (p *Client) FindTopicByProducer(eventType interface{}) (string, error) {
 	return "", errors.New("consumer not found")
 }
 
-func (p *Client) SendMessage(eventType *utils.Event) {
+// SendMessage send a message to a specific topic
+func (p *Client) SendMessage(event interface{}) {
 	go func() {
-		topic, err := p.FindTopicByProducer(eventType.Message)
+		topic, err := p.FindTopicByEventType(event)
 		if err != nil {
 			p.Logger.Errorw("Error Getting Topic By Event", err)
 			return
 		}
 
-		messageBytes, err := json.Marshal(eventType)
+		messageBytes, err := json.Marshal(event)
 		if err != nil {
 			p.Logger.Errorw("Error Serializing message", err)
 			return
@@ -35,6 +37,16 @@ func (p *Client) SendMessage(eventType *utils.Event) {
 		message := &sarama.ProducerMessage{
 			Topic: topic,
 			Value: sarama.StringEncoder(messageBytes),
+			Headers: []sarama.RecordHeader{
+				{
+					Key:   []byte("Id"),
+					Value: []byte(uuid.New().String()),
+				},
+				{
+					Key:   []byte("App_Name"),
+					Value: []byte(p.AppName),
+				},
+			},
 		}
 
 		p.Client.Input() <- message

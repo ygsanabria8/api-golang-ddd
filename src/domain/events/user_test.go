@@ -18,8 +18,7 @@ func TestGivenUserWhenCallNewCreatedUserEventShouldReturnEvent(t *testing.T) {
 
 	// Assert
 	assert.NotNil(t, event)
-	assert.NotNil(t, event.Id)
-	assert.NotNil(t, event.Message)
+	assert.NotNil(t, event.User)
 }
 
 func TestGivenUserWhenCallNewUpdatedUserEventShouldReturnEvent(t *testing.T) {
@@ -33,8 +32,7 @@ func TestGivenUserWhenCallNewUpdatedUserEventShouldReturnEvent(t *testing.T) {
 
 	// Assert
 	assert.NotNil(t, event)
-	assert.NotNil(t, event.Id)
-	assert.NotNil(t, event.Message)
+	assert.NotNil(t, event.User)
 }
 
 func TestGivenUserIdWhenCallNewDeletedUserEventShouldReturnEvent(t *testing.T) {
@@ -46,6 +44,5 @@ func TestGivenUserIdWhenCallNewDeletedUserEventShouldReturnEvent(t *testing.T) {
 
 	// Assert
 	assert.NotNil(t, event)
-	assert.NotNil(t, event.Id)
-	assert.NotNil(t, event.Message)
+	assert.NotNil(t, event.UserId)
 }

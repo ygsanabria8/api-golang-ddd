@@ -3,9 +3,9 @@ package services_test
 import (
 	kafkamocks "api.ddd/mocks/pkgs/message_bus"
 	domainmocks "api.ddd/mocks/src/domain/interfaces"
-	"api.ddd/pkgs/message_bus/utils"
 	"api.ddd/src/api/server"
 	"api.ddd/src/domain/aggregates"
+	"api.ddd/src/domain/events"
 	services "api.ddd/src/domain/services/user"
 	"errors"
 	"github.com/stretchr/testify/assert"
@@ -170,7 +170,7 @@ func TestGivenUserWhenCallCreateUserShouldReturnUser(t *testing.T) {
 		}).
 		Return(expectedUser, nil)
 
-	KafkaMock.On(mockedMethodKafka, mock.IsType(&utils.Event{}))
+	KafkaMock.On(mockedMethodKafka, mock.IsType(&events.CreatedUserEvent{}))
 
 	service := &services.UserService{
 		NoSqlRepository: NoSqlRepositoryMock,
@@ -207,7 +207,7 @@ func TestGivenUserWhenCallCreateUserShouldReturnError(t *testing.T) {
 	NoSqlRepositoryMock.On(mockedMethodStorage, mock.IsType(&aggregates.User{})).
 		Return(nil, nil)
 
-	KafkaMock.On(mockedMethodKafka, mock.IsType(&utils.Event{}))
+	KafkaMock.On(mockedMethodKafka, mock.IsType(&events.CreatedUserEvent{}))
 
 	service := &services.UserService{
 		NoSqlRepository: NoSqlRepositoryMock,
@@ -253,7 +253,7 @@ func TestGivenUserWhenCallUpdateUserShouldReturnUser(t *testing.T) {
 		}).
 		Return(expectedUser, nil)
 
-	KafkaMock.On(mockedMethodKafka, mock.IsType(&utils.Event{}))
+	KafkaMock.On(mockedMethodKafka, mock.IsType(&events.UpdatedUserEvent{}))
 
 	service := &services.UserService{
 		NoSqlRepository: NoSqlRepositoryMock,
@@ -290,7 +290,7 @@ func TestGivenUserWhenCallUpdateUserShouldReturnError(t *testing.T) {
 	NoSqlRepositoryMock.On(mockedMethodStorage, mock.IsType(&aggregates.User{})).
 		Return(nil, nil)
 
-	KafkaMock.On(mockedMethodKafka, mock.IsType(&utils.Event{}))
+	KafkaMock.On(mockedMethodKafka, mock.IsType(&events.UpdatedUserEvent{}))
 
 	service := &services.UserService{
 		NoSqlRepository: NoSqlRepositoryMock,
@@ -330,7 +330,7 @@ func TestGivenUserWhenCallDeleteUserShouldReturnNilError(t *testing.T) {
 		}).
 		Return(nil)
 
-	KafkaMock.On(mockedMethodKafka, mock.IsType(&utils.Event{}))
+	KafkaMock.On(mockedMethodKafka, mock.IsType(&events.DeletedUserEvent{}))
 
 	service := &services.UserService{
 		NoSqlRepository: NoSqlRepositoryMock,
@@ -366,7 +366,7 @@ func TestGivenUserWhenCallDeleteUserShouldReturnError(t *testing.T) {
 	NoSqlRepositoryMock.On(mockedMethodStorage, mock.IsType(userId)).
 		Return(expectedError)
 
-	KafkaMock.On(mockedMethodKafka, mock.IsType(&utils.Event{}))
+	KafkaMock.On(mockedMethodKafka, mock.IsType(&events.DeletedUserEvent{}))
 
 	service := &services.UserService{
 		NoSqlRepository: NoSqlRepositoryMock,
