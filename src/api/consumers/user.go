@@ -3,6 +3,7 @@ package consumers
 import (
 	"api.ddd/pkgs/message_bus/utils"
 	"api.ddd/src/domain/events"
+	constants "api.ddd/src/utils"
 	"encoding/json"
 )
 
@@ -12,7 +13,7 @@ func (e *CreatedUserEventMessage) OnMessage(event utils.IEvent) {
 	var message *events.CreatedUserEvent
 	err := json.Unmarshal(event.GetMessage(), &message)
 	if err != nil {
-		e.logger.Infow("Error Getting Message", err)
+		e.logger.Infow(constants.ErrorDeserializerMessageBus, err)
 		return
 	}
 
@@ -25,7 +26,7 @@ func (e *UpdatedUserEventMessage) OnMessage(event utils.IEvent) {
 	var message *events.UpdatedUserEvent
 	err := json.Unmarshal(event.GetMessage(), &message)
 	if err != nil {
-		e.logger.Infow("Error Getting Message", err)
+		e.logger.Infow(constants.ErrorDeserializerMessageBus, err)
 		return
 	}
 
@@ -38,7 +39,7 @@ func (e *DeletedUserEventMessage) OnMessage(event utils.IEvent) {
 	var message *events.DeletedUserEvent
 	err := json.Unmarshal(event.GetMessage(), &message)
 	if err != nil {
-		e.logger.Infow("Error Getting Message", err)
+		e.logger.Infow(constants.ErrorDeserializerMessageBus, err)
 		return
 	}
 

@@ -36,7 +36,7 @@ func (r *MongoUserRepository) DeleteUser(userId string) error {
 	id, err := utils.IsValidUUID(userId)
 	if err != nil {
 		r.logger.Errorw("Error Invalid UUID", err)
-		return errors.New("some error happens updating into database")
+		return errors.New("some error happens deleting into database")
 	}
 
 	filter := bson.M{
@@ -68,7 +68,7 @@ func (r *MongoUserRepository) UpdateUser(user *aggregates.User) (*aggregates.Use
 	id, err := utils.IsValidUUID(user.Id)
 	if err != nil {
 		r.logger.Errorw("Error Invalid UUID", err)
-		return nil, errors.New("some error happens updating into database")
+		return nil, errors.New("invalid user id")
 	}
 
 	filter := bson.M{
@@ -84,7 +84,7 @@ func (r *MongoUserRepository) UpdateUser(user *aggregates.User) (*aggregates.Use
 
 	if result.ModifiedCount == 0 {
 		r.logger.Errorw("User Not Updated", err)
-		return nil, errors.New("some error happens updating into database")
+		return nil, errors.New("not user modified")
 	}
 
 	return user, nil
