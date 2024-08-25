@@ -48,14 +48,30 @@ func (c *Client) ConsumeClaim(session sarama.ConsumerGroupSession, claim sarama.
 			return errors.New("consumer was not registered")
 		}
 
-		go handler.OnMessage(&utils.Event{
-			Headers: message.Headers,
-			Topic:   message.Topic,
-			Message: message.Value,
-		})
+		errorChan := make(chan error)
+		go ConsumeMessage(
+			handler,
+			&utils.Event{
+				Headers: message.Headers,
+				Topic:   message.Topic,
+				Message: message.Value,
+			},
+			errorChan,
+		)
+
+		err = <-errorChan
+		if err != nil {
+			c.Logger.Errorf("Consumer Handler Error: %s", err.Error())
+			return err
+		}
 		session.MarkMessage(message, "")
 	}
 	return nil
+}
+
+func ConsumeMessage(handler IEventHandler, event *utils.Event, errorChan chan error) {
+	err := handler.OnMessage(event)
+	errorChan <- err
 }
 
 // Setup will be executed before consumer start consuming messages
