@@ -19,7 +19,7 @@ type Consumer struct {
 
 // IEventHandler interface that execute when a message arrive
 type IEventHandler interface {
-	OnMessage(event utils.IEvent)
+	OnMessage(event utils.IEvent) error
 }
 
 type IConsumer interface {
