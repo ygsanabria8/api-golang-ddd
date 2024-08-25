@@ -36,7 +36,7 @@ func (r *MongoUserRepository) DeleteUser(userId string) error {
 	id, err := utils.IsValidUUID(userId)
 	if err != nil {
 		r.logger.Errorw("Error Invalid UUID", err)
-		return errors.New("some error happens deleting into database")
+		return errors.New("invalid user id")
 	}
 
 	filter := bson.M{
@@ -52,7 +52,7 @@ func (r *MongoUserRepository) DeleteUser(userId string) error {
 
 	if result.DeletedCount == 0 {
 		r.logger.Errorw("Not Deleted User")
-		return errors.New("some error happens deleting into database")
+		return errors.New("not user deleted")
 	}
 	return nil
 }
