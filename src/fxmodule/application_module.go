@@ -28,10 +28,12 @@ func RegisterHandlers(
 	deleteUserCommandHandler *command.DeleteUserCommandHandler,
 	getUserByIdQueryHandler *query.GetUserByIdQueryHandler,
 	getAllUsersQueryHandler *query.GetAllUsersQueryHandler,
-) {
-	_ = dispatcher.RegisterHandler(createUserCommandHandler, &command.CreateUserCommand{})
-	_ = dispatcher.RegisterHandler(updateUserCommandHandler, &command.UpdateUserCommand{})
-	_ = dispatcher.RegisterHandler(deleteUserCommandHandler, &command.DeleteUserCommand{})
-	_ = dispatcher.RegisterHandler(getUserByIdQueryHandler, &query.GetUserByIdQuery{})
-	_ = dispatcher.RegisterHandler(getAllUsersQueryHandler, &query.GetAllUsersQuery{})
+) error {
+	err := dispatcher.RegisterHandler(createUserCommandHandler, &command.CreateUserCommand{})
+	err = dispatcher.RegisterHandler(updateUserCommandHandler, &command.UpdateUserCommand{})
+	err = dispatcher.RegisterHandler(deleteUserCommandHandler, &command.DeleteUserCommand{})
+	err = dispatcher.RegisterHandler(getUserByIdQueryHandler, &query.GetUserByIdQuery{})
+	err = dispatcher.RegisterHandler(getAllUsersQueryHandler, &query.GetAllUsersQuery{})
+
+	return err
 }
