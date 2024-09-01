@@ -3,7 +3,6 @@ package register_services
 import (
 	"api.ddd/src/api/server"
 	"context"
-	"fmt"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"time"
@@ -11,14 +10,7 @@ import (
 
 // ProvideMongoClient Provide Mongo Client Instance
 func ProvideMongoClient(logger *server.Logger, config *server.Configuration) *mongo.Client {
-	dsn := fmt.Sprintf(
-		"mongodb://%s:%s@%s:%s",
-		config.Mongo.User,
-		config.Mongo.Password,
-		config.Mongo.Host,
-		config.Mongo.Port,
-	)
-	var clientOptions = options.Client().ApplyURI(dsn)
+	var clientOptions = options.Client().ApplyURI(config.Mongo.ConnectionString)
 
 	clientOptions.SetMaxPoolSize(50)
 	clientOptions.SetMinPoolSize(1)

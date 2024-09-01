@@ -15,12 +15,9 @@ type Server struct {
 }
 
 type Mongo struct {
-	Host        string       `mapstructure:"Host"`
-	Port        string       `mapstructure:"Port"`
-	User        string       `mapstructure:"User"`
-	Password    string       `mapstructure:"Password"`
-	Database    string       `mapstructure:"Database"`
-	Collections *Collections `mapstructure:"Collections"`
+	ConnectionString string       `mapstructure:"ConnectionString"`
+	Database         string       `mapstructure:"Database"`
+	Collections      *Collections `mapstructure:"Collections"`
 }
 
 type Collections struct {
@@ -28,11 +25,8 @@ type Collections struct {
 }
 
 type Sql struct {
-	Host         string `mapstructure:"Host"`
-	Port         int    `mapstructure:"Port"`
-	User         string `mapstructure:"User"`
-	Password     string `mapstructure:"Password"`
-	DatabaseName string `mapstructure:"DatabaseName"`
+	ConnectionString string `mapstructure:"ConnectionString"`
+	DatabaseName     string `mapstructure:"DatabaseName"`
 }
 
 type Kafka struct {

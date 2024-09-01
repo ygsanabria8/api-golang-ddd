@@ -2,18 +2,21 @@ package server
 
 import (
 	"github.com/spf13/viper"
+	"os"
 	"strings"
 )
 
 func SetUpConfig(logger *Logger) *Configuration {
-	viper.SetConfigFile(".env")
-
-	if err := viper.ReadInConfig(); err != nil {
-		logger.Errorw("Error Reading .Env File", err)
-		panic(err.Error())
+	// In local viper load .env file
+	if _, err := os.Stat(".env"); !os.IsNotExist(err) {
+		viper.SetConfigFile(".env")
+		if err := viper.ReadInConfig(); err != nil {
+			logger.Warnf("Error reading .env file: %v", err)
+		}
 	}
-	viper.AutomaticEnv()
 
+	// Viper read environment variables
+	viper.AutomaticEnv()
 	viper.SetConfigName("config")
 	viper.SetConfigType("yaml")
 	viper.AddConfigPath(".")
@@ -29,7 +32,11 @@ func SetUpConfig(logger *Logger) *Configuration {
 		panic(err.Error())
 	}
 
-	config.Server.Header = strings.Split(viper.GetString("Header"), ",")
-	config.Server.Origin = strings.Split(viper.GetString("Origin"), ",")
+	config.Server.Header = strings.Split(viper.GetString("HEADER"), ",")
+	config.Server.Origin = strings.Split(viper.GetString("ORIGIN"), ",")
+	config.Mongo.ConnectionString = viper.GetString("MONGO_CONNECTION_STRING")
+	config.Sql.ConnectionString = viper.GetString("SQL_CONNECTION_STRING")
+	config.Kafka.Broker = viper.GetString("KAFKA_BROKER")
+
 	return &config
 }
