@@ -3,6 +3,15 @@ name: CD Action
 on:
   push:
     branches: ['main']
+    paths:
+      - '.src/**'
+      - 'pkgs/**'
+      - '.docker/**'
+      - 'main.go'
+      - 'config.yaml'
+      - 'go.mod'
+      - 'go.sum'
+      - '.github/workflows/**'
 
 env:
   REGISTRY: ghcr.io
