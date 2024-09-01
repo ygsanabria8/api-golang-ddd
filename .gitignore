@@ -35,3 +35,6 @@ tmp
 
 # Ignore sonar folders
 .scannerwork
+
+# Ignore yarn.lock
+yarn.lock
