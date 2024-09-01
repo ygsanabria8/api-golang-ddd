@@ -29,7 +29,7 @@ sonarqube_report:
       -Dsonar.host.url=http://127.0.0.1:9000 \
       -Dsonar.token={YOUR_LOCAL_TOKEN}
 
-mocks:
+build_mocks:
 	@echo "  >  Generating Mocks..."
 	mockery --all
 
