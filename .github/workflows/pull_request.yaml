@@ -4,6 +4,15 @@ on:
   pull_request:
     types: ['opened', 'reopened', 'edited', 'synchronize']
     branches: ['main']
+    paths:
+      - '.src/**'
+      - 'pkgs/**'
+      - '.docker/**'
+      - 'main.go'
+      - 'config.yaml'
+      - 'go.mod'
+      - 'go.sum'
+      - '.github/workflows/**'
 
 jobs:
   Build_Project:
