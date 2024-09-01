@@ -58,7 +58,7 @@ func TestWhenCallCreateUserCommandHandlerShouldReturnUser(t *testing.T) {
 	KafkaMock.On(mockedMethodKafka, mock.IsType(&events.CreatedUserEvent{}))
 
 	message := mediator.CreateMessage(commandMessage)
-	commandHandler := command.NewCreateUserCommandHandler(command.CreateUserCommandHandler{
+	commandHandler := command.NewCreateUserCommandHandler(command.Params{
 		Logger:          loggerMock,
 		SqlRepository:   SqlRepositoryMock,
 		NoSqlRepository: NoSqlRepositoryMock,
@@ -101,7 +101,7 @@ func TestWhenCallCreateUserCommandHandlerShouldReturnError(t *testing.T) {
 	KafkaMock.On(mockedMethodKafka, mock.IsType(&events.CreatedUserEvent{}))
 
 	message := mediator.CreateMessage(commandMessage)
-	commandHandler := command.NewCreateUserCommandHandler(command.CreateUserCommandHandler{
+	commandHandler := command.NewCreateUserCommandHandler(command.Params{
 		Logger:          loggerMock,
 		SqlRepository:   SqlRepositoryMock,
 		NoSqlRepository: NoSqlRepositoryMock,
@@ -153,7 +153,7 @@ func TestWhenCallUpdateUserCommandHandlerShouldReturnUser(t *testing.T) {
 	KafkaMock.On(mockedMethodKafka, mock.IsType(&events.CreatedUserEvent{}))
 
 	message := mediator.CreateMessage(commandMessage)
-	commandHandler := command.NewUpdateUserCommandHandler(command.UpdateUserCommandHandler{
+	commandHandler := command.NewUpdateUserCommandHandler(command.Params{
 		Logger:          loggerMock,
 		SqlRepository:   SqlRepositoryMock,
 		NoSqlRepository: NoSqlRepositoryMock,
@@ -197,7 +197,7 @@ func TestWhenCallUpdateUserCommandHandlerShouldReturnError(t *testing.T) {
 	KafkaMock.On(mockedMethodKafka, mock.IsType(&events.UpdatedUserEvent{}))
 
 	message := mediator.CreateMessage(commandMessage)
-	commandHandler := command.NewUpdateUserCommandHandler(command.UpdateUserCommandHandler{
+	commandHandler := command.NewUpdateUserCommandHandler(command.Params{
 		Logger:          loggerMock,
 		SqlRepository:   SqlRepositoryMock,
 		NoSqlRepository: NoSqlRepositoryMock,
@@ -239,7 +239,7 @@ func TestWhenCallDeleteUserCommandHandlerShouldReturnUserId(t *testing.T) {
 	KafkaMock.On(mockedMethodKafka, mock.IsType(&events.DeletedUserEvent{}))
 
 	message := mediator.CreateMessage(commandMessage)
-	commandHandler := command.NewDeleteUserCommandHandler(command.DeleteUserCommandHandler{
+	commandHandler := command.NewDeleteUserCommandHandler(command.Params{
 		Logger:          loggerMock,
 		SqlRepository:   SqlRepositoryMock,
 		NoSqlRepository: NoSqlRepositoryMock,
@@ -280,7 +280,7 @@ func TestWhenCallDeleteUserCommandHandlerShouldReturnError(t *testing.T) {
 	KafkaMock.On(mockedMethodKafka, mock.IsType(&events.DeletedUserEvent{}))
 
 	message := mediator.CreateMessage(commandMessage)
-	commandHandler := command.NewDeleteUserCommandHandler(command.DeleteUserCommandHandler{
+	commandHandler := command.NewDeleteUserCommandHandler(command.Params{
 		Logger:          loggerMock,
 		SqlRepository:   SqlRepositoryMock,
 		NoSqlRepository: NoSqlRepositoryMock,

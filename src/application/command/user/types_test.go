@@ -8,7 +8,7 @@ import (
 
 func TestWhenCallNewCreateUserCommandHandlerShouldReturnCreateUserCommandHandler(t *testing.T) {
 	// Act
-	commandHandler := command.NewCreateUserCommandHandler(command.CreateUserCommandHandler{
+	commandHandler := command.NewCreateUserCommandHandler(command.Params{
 		Logger:          loggerMock,
 		SqlRepository:   SqlRepositoryMock,
 		NoSqlRepository: NoSqlRepositoryMock,
@@ -22,7 +22,7 @@ func TestWhenCallNewCreateUserCommandHandlerShouldReturnCreateUserCommandHandler
 
 func TestWhenCallNewUpdateUserCommandHandlerShouldReturnUpdateUserCommandHandler(t *testing.T) {
 	// Act
-	commandHandler := command.NewUpdateUserCommandHandler(command.UpdateUserCommandHandler{
+	commandHandler := command.NewUpdateUserCommandHandler(command.Params{
 		Logger:          loggerMock,
 		SqlRepository:   SqlRepositoryMock,
 		NoSqlRepository: NoSqlRepositoryMock,
@@ -36,7 +36,7 @@ func TestWhenCallNewUpdateUserCommandHandlerShouldReturnUpdateUserCommandHandler
 
 func TestWhenCallNewNewDeleteUserCommandHandlerShouldReturnDeleteUserCommandHandler(t *testing.T) {
 	// Act
-	commandHandler := command.NewDeleteUserCommandHandler(command.DeleteUserCommandHandler{
+	commandHandler := command.NewDeleteUserCommandHandler(command.Params{
 		Logger:          loggerMock,
 		SqlRepository:   SqlRepositoryMock,
 		NoSqlRepository: NoSqlRepositoryMock,

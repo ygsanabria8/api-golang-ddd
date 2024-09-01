@@ -14,7 +14,10 @@ func TestWhenCallNewGetUserByIdQueryHandlerShouldReturnGetUserByIdQueryHandler(t
 	finder := &mocks.IUserFinder{}
 
 	// Act
-	queryHandler := query.NewGetUserByIdQueryHandler(logger, finder)
+	queryHandler := query.NewGetUserByIdQueryHandler(query.Params{
+		Logger:      logger,
+		NoSqlFinder: finder,
+	})
 
 	// Assert
 	assert.NotNil(t, queryHandler)
@@ -27,7 +30,10 @@ func TestWhenCallNewGetAllUsersQueryHandlerShouldReturnGetAllUsersQueryHandler(t
 	finder := &mocks.IUserFinder{}
 
 	// Act
-	queryHandler := query.NewGetAllUsersQueryHandler(logger, finder)
+	queryHandler := query.NewGetAllUsersQueryHandler(query.Params{
+		Logger:      logger,
+		NoSqlFinder: finder,
+	})
 
 	// Assert
 	assert.NotNil(t, queryHandler)

@@ -28,7 +28,10 @@ func TestWhenCallGetUserByIdQueryHandlerShouldReturnUser(t *testing.T) {
 
 	message := mediator.CreateMessage(queryMessage)
 	finder.On(methodMocker, mock.Anything).Return(expectedUser, nil)
-	queryHandler := query.NewGetUserByIdQueryHandler(logger, finder)
+	queryHandler := query.NewGetUserByIdQueryHandler(query.Params{
+		Logger:      logger,
+		NoSqlFinder: finder,
+	})
 
 	// Act
 	user, err := queryHandler.Handler(message)
@@ -54,7 +57,10 @@ func TestWhenCallGetUserByIdQueryHandlerShouldReturnError(t *testing.T) {
 
 	message := mediator.CreateMessage(queryMessage)
 	finder.On(methodMocker, mock.Anything).Return(nil, expectedError)
-	queryHandler := query.NewGetUserByIdQueryHandler(logger, finder)
+	queryHandler := query.NewGetUserByIdQueryHandler(query.Params{
+		Logger:      logger,
+		NoSqlFinder: finder,
+	})
 
 	// Act
 	user, err := queryHandler.Handler(message)
@@ -83,7 +89,10 @@ func TestWhenCallGetAllUsersQueryHandlerShouldReturnUsers(t *testing.T) {
 
 	message := mediator.CreateMessage(queryMessage)
 	finder.On(methodMocker, mock.Anything).Return(expectedUser, nil)
-	queryHandler := query.NewGetAllUsersQueryHandler(logger, finder)
+	queryHandler := query.NewGetAllUsersQueryHandler(query.Params{
+		Logger:      logger,
+		NoSqlFinder: finder,
+	})
 
 	// Act
 	users, err := queryHandler.Handler(message)
@@ -106,7 +115,10 @@ func TestWhenCallGetAllUsersQueryHandlerShouldReturnError(t *testing.T) {
 
 	message := mediator.CreateMessage(queryMessage)
 	finder.On(methodMocker, mock.Anything).Return(nil, expectedError)
-	queryHandler := query.NewGetAllUsersQueryHandler(logger, finder)
+	queryHandler := query.NewGetAllUsersQueryHandler(query.Params{
+		Logger:      logger,
+		NoSqlFinder: finder,
+	})
 
 	// Act
 	user, err := queryHandler.Handler(message)
