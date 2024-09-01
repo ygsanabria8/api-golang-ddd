@@ -3,24 +3,30 @@ package query
 import (
 	"api.ddd/src/api/server"
 	"api.ddd/src/domain/interfaces"
+	"go.uber.org/fx"
 )
+
+type Params struct {
+	fx.In
+	Logger      *server.Logger
+	NoSqlFinder interfaces.IUserFinder `name:"NoSqlFinder"`
+}
 
 type GetUserByIdQuery struct {
 	Id string
 }
 
 type GetUserByIdQueryHandler struct {
-	logger  *server.Logger
-	service interfaces.IUserService
+	logger *server.Logger
+	finder interfaces.IUserFinder
 }
 
 func NewGetUserByIdQueryHandler(
-	logger *server.Logger,
-	service interfaces.IUserService,
+	params Params,
 ) *GetUserByIdQueryHandler {
 	return &GetUserByIdQueryHandler{
-		logger:  logger,
-		service: service,
+		logger: params.Logger,
+		finder: params.NoSqlFinder,
 	}
 }
 
@@ -29,16 +35,15 @@ type GetAllUsersQuery struct {
 }
 
 type GetAllUsersQueryHandler struct {
-	logger  *server.Logger
-	service interfaces.IUserService
+	logger *server.Logger
+	finder interfaces.IUserFinder
 }
 
 func NewGetAllUsersQueryHandler(
-	logger *server.Logger,
-	service interfaces.IUserService,
+	params Params,
 ) *GetAllUsersQueryHandler {
 	return &GetAllUsersQueryHandler{
-		logger:  logger,
-		service: service,
+		logger: params.Logger,
+		finder: params.NoSqlFinder,
 	}
 }

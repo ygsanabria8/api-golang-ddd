@@ -21,8 +21,21 @@ func (_m *IEventHandler) EXPECT() *IEventHandler_Expecter {
 }
 
 // OnMessage provides a mock function with given fields: event
-func (_m *IEventHandler) OnMessage(event utils.IEvent) {
-	_m.Called(event)
+func (_m *IEventHandler) OnMessage(event utils.IEvent) error {
+	ret := _m.Called(event)
+
+	if len(ret) == 0 {
+		panic("no return value specified for OnMessage")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(utils.IEvent) error); ok {
+		r0 = rf(event)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
 }
 
 // IEventHandler_OnMessage_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'OnMessage'
@@ -43,12 +56,12 @@ func (_c *IEventHandler_OnMessage_Call) Run(run func(event utils.IEvent)) *IEven
 	return _c
 }
 
-func (_c *IEventHandler_OnMessage_Call) Return() *IEventHandler_OnMessage_Call {
-	_c.Call.Return()
+func (_c *IEventHandler_OnMessage_Call) Return(_a0 error) *IEventHandler_OnMessage_Call {
+	_c.Call.Return(_a0)
 	return _c
 }
 
-func (_c *IEventHandler_OnMessage_Call) RunAndReturn(run func(utils.IEvent)) *IEventHandler_OnMessage_Call {
+func (_c *IEventHandler_OnMessage_Call) RunAndReturn(run func(utils.IEvent) error) *IEventHandler_OnMessage_Call {
 	_c.Call.Return(run)
 	return _c
 }

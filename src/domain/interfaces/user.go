@@ -16,6 +16,4 @@ type IUserFinder interface {
 }
 
 type IUserService interface {
-	IUserFinder
-	IUserRepository
 }

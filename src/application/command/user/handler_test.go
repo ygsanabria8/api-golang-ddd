@@ -1,11 +1,13 @@
 package command_test
 
 import (
-	mocks "api.ddd/mocks/src/domain/interfaces"
+	kafkamocks "api.ddd/mocks/pkgs/message_bus"
+	domainmocks "api.ddd/mocks/src/domain/interfaces"
 	"api.ddd/pkgs/mediator"
 	"api.ddd/src/api/server"
 	command "api.ddd/src/application/command/user"
 	"api.ddd/src/domain/aggregates"
+	"api.ddd/src/domain/events"
 	"errors"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
@@ -13,56 +15,98 @@ import (
 	"testing"
 )
 
+var KafkaMock = &kafkamocks.IMessageBusClient{}
+var NoSqlRepositoryMock = &domainmocks.IUserRepository{}
+var SqlRepositoryMock = &domainmocks.IUserRepository{}
+var loggerMock = server.ProvideLogger()
+
+func CleanMocks() {
+	NoSqlRepositoryMock = &domainmocks.IUserRepository{}
+	SqlRepositoryMock = &domainmocks.IUserRepository{}
+	KafkaMock = &kafkamocks.IMessageBusClient{}
+}
+
 func TestWhenCallCreateUserCommandHandlerShouldReturnUser(t *testing.T) {
 	// Arrange
-	logger := server.ProvideLogger()
-	service := &mocks.IUserService{}
-	methodMocker := "CreateUser"
+	CleanMocks()
+	mockedMethodStorage := "CreateUser"
+	mockedMethodKafka := "SendMessage"
 	commandMessage := &command.CreateUserCommand{
-		Name:     "",
-		Lastname: "",
-		Age:      1,
-		Email:    "",
+		Name:     "Clark",
+		Lastname: "Tower",
+		Email:    "clark@email.com",
+		Age:      11,
 	}
 	expectedUser := &aggregates.User{
-		Id:       uuid.New().String(),
-		Name:     "",
-		Lastname: "",
-		Age:      1,
-		Email:    "",
+		Id:       "some-user-id",
+		Name:     "Clark",
+		Lastname: "Tower",
+		Email:    "clark@email.com",
+		Age:      11,
 	}
 
+	SqlRepositoryMock.On(mockedMethodStorage, mock.IsType(&aggregates.User{})).
+		Return(expectedUser, nil)
+
+	doneGoroutine := make(chan struct{})
+	NoSqlRepositoryMock.On(mockedMethodStorage, mock.IsType(&aggregates.User{})).
+		Run(func(args mock.Arguments) {
+			defer close(doneGoroutine)
+		}).
+		Return(expectedUser, nil)
+
+	KafkaMock.On(mockedMethodKafka, mock.IsType(&events.CreatedUserEvent{}))
+
 	message := mediator.CreateMessage(commandMessage)
-	service.On(methodMocker, mock.Anything).Return(expectedUser, nil)
-	commandHandler := command.NewCreateUserCommandHandler(logger, service)
+	commandHandler := command.NewCreateUserCommandHandler(command.Params{
+		Logger:          loggerMock,
+		SqlRepository:   SqlRepositoryMock,
+		NoSqlRepository: NoSqlRepositoryMock,
+		Kafka:           KafkaMock,
+	})
 
 	// Act
 	user, err := commandHandler.Handler(message)
+	<-doneGoroutine
 
 	// Assert
 	assert.NotNil(t, user)
 	assert.Nil(t, err)
 	assert.IsType(t, &aggregates.User{}, user)
 	assert.Equal(t, expectedUser.Id, user.(*aggregates.User).Id)
-	service.AssertNumberOfCalls(t, methodMocker, 1)
+	SqlRepositoryMock.AssertNumberOfCalls(t, mockedMethodStorage, 1)
+	NoSqlRepositoryMock.AssertNumberOfCalls(t, mockedMethodStorage, 1)
+	KafkaMock.AssertNumberOfCalls(t, mockedMethodKafka, 1)
 }
 
 func TestWhenCallCreateUserCommandHandlerShouldReturnError(t *testing.T) {
 	// Arrange
-	logger := server.ProvideLogger()
-	service := &mocks.IUserService{}
-	methodMocker := "CreateUser"
-	expectedError := errors.New("some-error")
+	CleanMocks()
+	mockedMethodStorage := "CreateUser"
+	mockedMethodKafka := "SendMessage"
+	expectedError := errors.New("some error")
 	commandMessage := &command.CreateUserCommand{
-		Name:     "",
-		Lastname: "",
-		Age:      1,
-		Email:    "",
+		Name:     "Clark",
+		Lastname: "Tower",
+		Email:    "clark@email.com",
+		Age:      11,
 	}
 
+	SqlRepositoryMock.On(mockedMethodStorage, mock.IsType(&aggregates.User{})).
+		Return(nil, expectedError)
+
+	NoSqlRepositoryMock.On(mockedMethodStorage, mock.IsType(&aggregates.User{})).
+		Return(nil, nil)
+
+	KafkaMock.On(mockedMethodKafka, mock.IsType(&events.CreatedUserEvent{}))
+
 	message := mediator.CreateMessage(commandMessage)
-	service.On(methodMocker, mock.Anything).Return(nil, expectedError)
-	commandHandler := command.NewCreateUserCommandHandler(logger, service)
+	commandHandler := command.NewCreateUserCommandHandler(command.Params{
+		Logger:          loggerMock,
+		SqlRepository:   SqlRepositoryMock,
+		NoSqlRepository: NoSqlRepositoryMock,
+		Kafka:           KafkaMock,
+	})
 
 	// Act
 	user, err := commandHandler.Handler(message)
@@ -71,62 +115,94 @@ func TestWhenCallCreateUserCommandHandlerShouldReturnError(t *testing.T) {
 	assert.Nil(t, user)
 	assert.NotNil(t, err)
 	assert.Equal(t, expectedError, err)
-	service.AssertNumberOfCalls(t, methodMocker, 1)
+	SqlRepositoryMock.AssertNumberOfCalls(t, mockedMethodStorage, 1)
+	NoSqlRepositoryMock.AssertNumberOfCalls(t, mockedMethodStorage, 0)
+	KafkaMock.AssertNumberOfCalls(t, mockedMethodKafka, 0)
 }
 
 func TestWhenCallUpdateUserCommandHandlerShouldReturnUser(t *testing.T) {
 	// Arrange
-	logger := server.ProvideLogger()
-	service := &mocks.IUserService{}
-	methodMocker := "UpdateUser"
-	userId := uuid.New().String()
+	CleanMocks()
+	mockedMethodStorage := "UpdateUser"
+	mockedMethodKafka := "SendMessage"
 	commandMessage := &command.UpdateUserCommand{
-		Id:       userId,
-		Name:     "",
-		Lastname: "",
-		Age:      1,
-		Email:    "",
+		Id:       "some-user-id",
+		Name:     "Clark",
+		Lastname: "Tower",
+		Email:    "clark@email.com",
+		Age:      11,
 	}
 	expectedUser := &aggregates.User{
-		Id:       userId,
-		Name:     "",
-		Lastname: "",
-		Age:      1,
-		Email:    "",
+		Id:       "some-user-id",
+		Name:     "Clark",
+		Lastname: "Tower",
+		Email:    "clark@email.com",
+		Age:      11,
 	}
 
+	SqlRepositoryMock.On(mockedMethodStorage, mock.IsType(&aggregates.User{})).
+		Return(expectedUser, nil)
+
+	doneGoroutine := make(chan struct{})
+	NoSqlRepositoryMock.On(mockedMethodStorage, mock.IsType(&aggregates.User{})).
+		Run(func(args mock.Arguments) {
+			defer close(doneGoroutine)
+		}).
+		Return(expectedUser, nil)
+
+	KafkaMock.On(mockedMethodKafka, mock.IsType(&events.CreatedUserEvent{}))
+
 	message := mediator.CreateMessage(commandMessage)
-	service.On(methodMocker, mock.Anything).Return(expectedUser, nil)
-	commandHandler := command.NewUpdateUserCommandHandler(logger, service)
+	commandHandler := command.NewUpdateUserCommandHandler(command.Params{
+		Logger:          loggerMock,
+		SqlRepository:   SqlRepositoryMock,
+		NoSqlRepository: NoSqlRepositoryMock,
+		Kafka:           KafkaMock,
+	})
 
 	// Act
 	user, err := commandHandler.Handler(message)
+	<-doneGoroutine
 
 	// Assert
 	assert.NotNil(t, user)
 	assert.Nil(t, err)
 	assert.IsType(t, &aggregates.User{}, user)
-	assert.Equal(t, userId, user.(*aggregates.User).Id)
-	service.AssertNumberOfCalls(t, methodMocker, 1)
+	assert.Equal(t, commandMessage.Id, user.(*aggregates.User).Id)
+	SqlRepositoryMock.AssertNumberOfCalls(t, mockedMethodStorage, 1)
+	NoSqlRepositoryMock.AssertNumberOfCalls(t, mockedMethodStorage, 1)
+	KafkaMock.AssertNumberOfCalls(t, mockedMethodKafka, 1)
 }
 
 func TestWhenCallUpdateUserCommandHandlerShouldReturnError(t *testing.T) {
 	// Arrange
-	logger := server.ProvideLogger()
-	service := &mocks.IUserService{}
-	methodMocker := "UpdateUser"
-	expectedError := errors.New("some-error")
+	CleanMocks()
+	mockedMethodStorage := "UpdateUser"
+	mockedMethodKafka := "SendMessage"
+	expectedError := errors.New("some error")
 	commandMessage := &command.UpdateUserCommand{
-		Id:       uuid.New().String(),
-		Name:     "",
-		Lastname: "",
-		Age:      1,
-		Email:    "",
+		Id:       "some-id",
+		Name:     "Clark",
+		Lastname: "Tower",
+		Email:    "clark@email.com",
+		Age:      11,
 	}
 
+	SqlRepositoryMock.On(mockedMethodStorage, mock.IsType(&aggregates.User{})).
+		Return(nil, expectedError)
+
+	NoSqlRepositoryMock.On(mockedMethodStorage, mock.IsType(&aggregates.User{})).
+		Return(nil, nil)
+
+	KafkaMock.On(mockedMethodKafka, mock.IsType(&events.UpdatedUserEvent{}))
+
 	message := mediator.CreateMessage(commandMessage)
-	service.On(methodMocker, mock.Anything).Return(nil, expectedError)
-	commandHandler := command.NewUpdateUserCommandHandler(logger, service)
+	commandHandler := command.NewUpdateUserCommandHandler(command.Params{
+		Logger:          loggerMock,
+		SqlRepository:   SqlRepositoryMock,
+		NoSqlRepository: NoSqlRepositoryMock,
+		Kafka:           KafkaMock,
+	})
 
 	// Act
 	user, err := commandHandler.Handler(message)
@@ -135,47 +211,81 @@ func TestWhenCallUpdateUserCommandHandlerShouldReturnError(t *testing.T) {
 	assert.Nil(t, user)
 	assert.NotNil(t, err)
 	assert.Equal(t, expectedError, err)
-	service.AssertNumberOfCalls(t, methodMocker, 1)
+	SqlRepositoryMock.AssertNumberOfCalls(t, mockedMethodStorage, 1)
+	NoSqlRepositoryMock.AssertNumberOfCalls(t, mockedMethodStorage, 0)
+	KafkaMock.AssertNumberOfCalls(t, mockedMethodKafka, 0)
 }
 
 func TestWhenCallDeleteUserCommandHandlerShouldReturnUserId(t *testing.T) {
 	// Arrange
-	logger := server.ProvideLogger()
-	service := &mocks.IUserService{}
-	methodMocker := "DeleteUser"
+	CleanMocks()
+	mockedMethodStorage := "DeleteUser"
+	mockedMethodKafka := "SendMessage"
+	userId := uuid.New().String()
 	commandMessage := &command.DeleteUserCommand{
-		Id: uuid.New().String(),
+		Id: userId,
 	}
 
+	SqlRepositoryMock.On(mockedMethodStorage, mock.IsType(userId)).
+		Return(nil)
+
+	doneGoroutine := make(chan struct{})
+	NoSqlRepositoryMock.On(mockedMethodStorage, mock.IsType(userId)).
+		Run(func(args mock.Arguments) {
+			defer close(doneGoroutine)
+		}).
+		Return(nil)
+
+	KafkaMock.On(mockedMethodKafka, mock.IsType(&events.DeletedUserEvent{}))
+
 	message := mediator.CreateMessage(commandMessage)
-	service.On(methodMocker, mock.Anything).Return(nil)
-	commandHandler := command.NewDeleteUserCommandHandler(logger, service)
+	commandHandler := command.NewDeleteUserCommandHandler(command.Params{
+		Logger:          loggerMock,
+		SqlRepository:   SqlRepositoryMock,
+		NoSqlRepository: NoSqlRepositoryMock,
+		Kafka:           KafkaMock,
+	})
 
 	// Act
 	user, err := commandHandler.Handler(message)
+	<-doneGoroutine
 
 	// Assert
 	assert.NotNil(t, user)
 	assert.Nil(t, err)
 	assert.IsType(t, &command.DeleteUserCommand{}, user)
 	assert.Equal(t, commandMessage.Id, user.(*command.DeleteUserCommand).Id)
-	service.AssertNumberOfCalls(t, methodMocker, 1)
+	SqlRepositoryMock.AssertNumberOfCalls(t, mockedMethodStorage, 1)
+	NoSqlRepositoryMock.AssertNumberOfCalls(t, mockedMethodStorage, 1)
+	KafkaMock.AssertNumberOfCalls(t, mockedMethodKafka, 1)
 }
 
 func TestWhenCallDeleteUserCommandHandlerShouldReturnError(t *testing.T) {
 	// Arrange
-	logger := server.ProvideLogger()
-	service := &mocks.IUserService{}
-	methodMocker := "DeleteUser"
-	expectedError := errors.New("some-error")
-
+	CleanMocks()
+	mockedMethodStorage := "DeleteUser"
+	mockedMethodKafka := "SendMessage"
+	userId := uuid.New().String()
+	expectedError := errors.New("some error")
 	commandMessage := &command.DeleteUserCommand{
-		Id: uuid.New().String(),
+		Id: userId,
 	}
 
+	SqlRepositoryMock.On(mockedMethodStorage, mock.IsType(userId)).
+		Return(expectedError)
+
+	NoSqlRepositoryMock.On(mockedMethodStorage, mock.IsType(userId)).
+		Return(expectedError)
+
+	KafkaMock.On(mockedMethodKafka, mock.IsType(&events.DeletedUserEvent{}))
+
 	message := mediator.CreateMessage(commandMessage)
-	service.On(methodMocker, mock.Anything).Return(expectedError)
-	commandHandler := command.NewDeleteUserCommandHandler(logger, service)
+	commandHandler := command.NewDeleteUserCommandHandler(command.Params{
+		Logger:          loggerMock,
+		SqlRepository:   SqlRepositoryMock,
+		NoSqlRepository: NoSqlRepositoryMock,
+		Kafka:           KafkaMock,
+	})
 
 	// Act
 	user, err := commandHandler.Handler(message)
@@ -184,5 +294,7 @@ func TestWhenCallDeleteUserCommandHandlerShouldReturnError(t *testing.T) {
 	assert.Nil(t, user)
 	assert.NotNil(t, err)
 	assert.Equal(t, expectedError, err)
-	service.AssertNumberOfCalls(t, methodMocker, 1)
+	SqlRepositoryMock.AssertNumberOfCalls(t, mockedMethodStorage, 1)
+	NoSqlRepositoryMock.AssertNumberOfCalls(t, mockedMethodStorage, 0)
+	KafkaMock.AssertNumberOfCalls(t, mockedMethodKafka, 0)
 }
