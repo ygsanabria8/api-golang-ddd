@@ -1,20 +1,19 @@
 package command_test
 
 import (
-	mocks "api.ddd/mocks/src/domain/interfaces"
-	"api.ddd/src/api/server"
 	command "api.ddd/src/application/command/user"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
 func TestWhenCallNewCreateUserCommandHandlerShouldReturnCreateUserCommandHandler(t *testing.T) {
-	// Arrange
-	logger := server.ProvideLogger()
-	service := &mocks.IUserService{}
-
 	// Act
-	commandHandler := command.NewCreateUserCommandHandler(logger, service)
+	commandHandler := command.NewCreateUserCommandHandler(command.CreateUserCommandHandler{
+		Logger:          loggerMock,
+		SqlRepository:   SqlRepositoryMock,
+		NoSqlRepository: NoSqlRepositoryMock,
+		Kafka:           KafkaMock,
+	})
 
 	// Assert
 	assert.NotNil(t, commandHandler)
@@ -22,12 +21,13 @@ func TestWhenCallNewCreateUserCommandHandlerShouldReturnCreateUserCommandHandler
 }
 
 func TestWhenCallNewUpdateUserCommandHandlerShouldReturnUpdateUserCommandHandler(t *testing.T) {
-	// Arrange
-	logger := server.ProvideLogger()
-	service := &mocks.IUserService{}
-
 	// Act
-	commandHandler := command.NewUpdateUserCommandHandler(logger, service)
+	commandHandler := command.NewUpdateUserCommandHandler(command.UpdateUserCommandHandler{
+		Logger:          loggerMock,
+		SqlRepository:   SqlRepositoryMock,
+		NoSqlRepository: NoSqlRepositoryMock,
+		Kafka:           KafkaMock,
+	})
 
 	// Assert
 	assert.NotNil(t, commandHandler)
@@ -35,12 +35,13 @@ func TestWhenCallNewUpdateUserCommandHandlerShouldReturnUpdateUserCommandHandler
 }
 
 func TestWhenCallNewNewDeleteUserCommandHandlerShouldReturnDeleteUserCommandHandler(t *testing.T) {
-	// Arrange
-	logger := server.ProvideLogger()
-	service := &mocks.IUserService{}
-
 	// Act
-	commandHandler := command.NewDeleteUserCommandHandler(logger, service)
+	commandHandler := command.NewDeleteUserCommandHandler(command.DeleteUserCommandHandler{
+		Logger:          loggerMock,
+		SqlRepository:   SqlRepositoryMock,
+		NoSqlRepository: NoSqlRepositoryMock,
+		Kafka:           KafkaMock,
+	})
 
 	// Assert
 	assert.NotNil(t, commandHandler)

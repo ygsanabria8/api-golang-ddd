@@ -11,10 +11,10 @@ import (
 func TestWhenCallNewGetUserByIdQueryHandlerShouldReturnGetUserByIdQueryHandler(t *testing.T) {
 	// Arrange
 	logger := server.ProvideLogger()
-	service := &mocks.IUserService{}
+	finder := &mocks.IUserFinder{}
 
 	// Act
-	queryHandler := query.NewGetUserByIdQueryHandler(logger, service)
+	queryHandler := query.NewGetUserByIdQueryHandler(logger, finder)
 
 	// Assert
 	assert.NotNil(t, queryHandler)
@@ -24,10 +24,10 @@ func TestWhenCallNewGetUserByIdQueryHandlerShouldReturnGetUserByIdQueryHandler(t
 func TestWhenCallNewGetAllUsersQueryHandlerShouldReturnGetAllUsersQueryHandler(t *testing.T) {
 	// Arrange
 	logger := server.ProvideLogger()
-	service := &mocks.IUserService{}
+	finder := &mocks.IUserFinder{}
 
 	// Act
-	queryHandler := query.NewGetAllUsersQueryHandler(logger, service)
+	queryHandler := query.NewGetAllUsersQueryHandler(logger, finder)
 
 	// Assert
 	assert.NotNil(t, queryHandler)

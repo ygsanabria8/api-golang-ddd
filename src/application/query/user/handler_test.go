@@ -16,7 +16,7 @@ import (
 func TestWhenCallGetUserByIdQueryHandlerShouldReturnUser(t *testing.T) {
 	// Arrange
 	logger := server.ProvideLogger()
-	service := &mocks.IUserService{}
+	finder := &mocks.IUserFinder{}
 	userId := uuid.New().String()
 	methodMocker := "GetUserById"
 	queryMessage := &query.GetUserByIdQuery{
@@ -27,8 +27,8 @@ func TestWhenCallGetUserByIdQueryHandlerShouldReturnUser(t *testing.T) {
 	}
 
 	message := mediator.CreateMessage(queryMessage)
-	service.On(methodMocker, mock.Anything).Return(expectedUser, nil)
-	queryHandler := query.NewGetUserByIdQueryHandler(logger, service)
+	finder.On(methodMocker, mock.Anything).Return(expectedUser, nil)
+	queryHandler := query.NewGetUserByIdQueryHandler(logger, finder)
 
 	// Act
 	user, err := queryHandler.Handler(message)
@@ -38,13 +38,13 @@ func TestWhenCallGetUserByIdQueryHandlerShouldReturnUser(t *testing.T) {
 	assert.Nil(t, err)
 	assert.IsType(t, &aggregates.User{}, user)
 	assert.Equal(t, userId, user.(*aggregates.User).Id)
-	service.AssertNumberOfCalls(t, methodMocker, 1)
+	finder.AssertNumberOfCalls(t, methodMocker, 1)
 }
 
 func TestWhenCallGetUserByIdQueryHandlerShouldReturnError(t *testing.T) {
 	// Arrange
 	logger := server.ProvideLogger()
-	service := &mocks.IUserService{}
+	finder := &mocks.IUserFinder{}
 	methodMocker := "GetUserById"
 	expectedError := errors.New("not-found")
 	userId := uuid.New().String()
@@ -53,8 +53,8 @@ func TestWhenCallGetUserByIdQueryHandlerShouldReturnError(t *testing.T) {
 	}
 
 	message := mediator.CreateMessage(queryMessage)
-	service.On(methodMocker, mock.Anything).Return(nil, expectedError)
-	queryHandler := query.NewGetUserByIdQueryHandler(logger, service)
+	finder.On(methodMocker, mock.Anything).Return(nil, expectedError)
+	queryHandler := query.NewGetUserByIdQueryHandler(logger, finder)
 
 	// Act
 	user, err := queryHandler.Handler(message)
@@ -63,13 +63,13 @@ func TestWhenCallGetUserByIdQueryHandlerShouldReturnError(t *testing.T) {
 	assert.Nil(t, user)
 	assert.NotNil(t, err)
 	assert.Equal(t, expectedError, err)
-	service.AssertNumberOfCalls(t, methodMocker, 1)
+	finder.AssertNumberOfCalls(t, methodMocker, 1)
 }
 
 func TestWhenCallGetAllUsersQueryHandlerShouldReturnUsers(t *testing.T) {
 	// Arrange
 	logger := server.ProvideLogger()
-	service := &mocks.IUserService{}
+	finder := &mocks.IUserFinder{}
 	methodMocker := "GetAllUsers"
 	queryMessage := &query.GetAllUsersQuery{}
 	expectedUser := []*aggregates.User{
@@ -82,8 +82,8 @@ func TestWhenCallGetAllUsersQueryHandlerShouldReturnUsers(t *testing.T) {
 	}
 
 	message := mediator.CreateMessage(queryMessage)
-	service.On(methodMocker, mock.Anything).Return(expectedUser, nil)
-	queryHandler := query.NewGetAllUsersQueryHandler(logger, service)
+	finder.On(methodMocker, mock.Anything).Return(expectedUser, nil)
+	queryHandler := query.NewGetAllUsersQueryHandler(logger, finder)
 
 	// Act
 	users, err := queryHandler.Handler(message)
@@ -93,20 +93,20 @@ func TestWhenCallGetAllUsersQueryHandlerShouldReturnUsers(t *testing.T) {
 	assert.Nil(t, err)
 	assert.IsType(t, []*aggregates.User{}, users)
 	assert.Equal(t, len(expectedUser), len(users.([]*aggregates.User)))
-	service.AssertNumberOfCalls(t, methodMocker, 1)
+	finder.AssertNumberOfCalls(t, methodMocker, 1)
 }
 
 func TestWhenCallGetAllUsersQueryHandlerShouldReturnError(t *testing.T) {
 	// Arrange
 	logger := server.ProvideLogger()
-	service := &mocks.IUserService{}
+	finder := &mocks.IUserFinder{}
 	methodMocker := "GetAllUsers"
 	expectedError := errors.New("not-found")
 	queryMessage := &query.GetAllUsersQuery{}
 
 	message := mediator.CreateMessage(queryMessage)
-	service.On(methodMocker, mock.Anything).Return(nil, expectedError)
-	queryHandler := query.NewGetAllUsersQueryHandler(logger, service)
+	finder.On(methodMocker, mock.Anything).Return(nil, expectedError)
+	queryHandler := query.NewGetAllUsersQueryHandler(logger, finder)
 
 	// Act
 	user, err := queryHandler.Handler(message)
@@ -115,5 +115,5 @@ func TestWhenCallGetAllUsersQueryHandlerShouldReturnError(t *testing.T) {
 	assert.Nil(t, user)
 	assert.NotNil(t, err)
 	assert.Equal(t, expectedError, err)
-	service.AssertNumberOfCalls(t, methodMocker, 1)
+	finder.AssertNumberOfCalls(t, methodMocker, 1)
 }
