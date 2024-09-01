@@ -11,11 +11,8 @@ import (
 // ProvideSqlClient Provide Sql Client Instance
 func ProvideSqlClient(logger *server.Logger, config *server.Configuration) *gorm.DB {
 	dsn := fmt.Sprintf(
-		"%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=True&loc=Local",
-		config.Sql.User,
-		config.Sql.Password,
-		config.Sql.Host,
-		config.Sql.Port,
+		"%s/%s?charset=utf8&parseTime=True&loc=Local",
+		config.Sql.ConnectionString,
 		config.Sql.DatabaseName,
 	)
 	client, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
