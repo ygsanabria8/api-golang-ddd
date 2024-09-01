@@ -59,7 +59,7 @@ func TestGivenGinLoggerWhenCallWriteShouldReturnNilError(t *testing.T) {
 	assert.Nil(t, err)
 }
 
-func TestGivenLoggerWhenCallGetFxLoggerShouldReturnFxLogger(t *testing.T) {
+func TestGivenFxLoggerWhenCallGetFxLoggerShouldReturnFxLogger(t *testing.T) {
 	// Arrange
 	logger := server.ProvideLogger()
 
@@ -70,4 +70,30 @@ func TestGivenLoggerWhenCallGetFxLoggerShouldReturnFxLogger(t *testing.T) {
 	assert.NotNil(t, fxLogger)
 	assert.IsType(t, &server.FxLogger{}, fxLogger)
 	assert.NotNil(t, fxLogger.SugaredLogger)
+}
+
+func TestGivenFxLoggerWhenCallPrintfWithoutArgsShouldCallInfo(t *testing.T) {
+	// Arrange
+	logger := server.ProvideLogger().GetFxLogger()
+
+	// Act
+	logger.Printf("dummy-message")
+
+	// Assert
+	assert.NotNil(t, logger)
+	assert.IsType(t, &server.FxLogger{}, logger)
+	assert.NotNil(t, logger.SugaredLogger)
+}
+
+func TestGivenFxLoggerWhenCallPrintfWithArgsShouldCallInfof(t *testing.T) {
+	// Arrange
+	logger := server.ProvideLogger().GetFxLogger()
+
+	// Act
+	logger.Printf("dummy-message", []interface{}{"arg"})
+
+	// Assert
+	assert.NotNil(t, logger)
+	assert.IsType(t, &server.FxLogger{}, logger)
+	assert.NotNil(t, logger.SugaredLogger)
 }
