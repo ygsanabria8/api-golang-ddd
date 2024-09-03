@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "api-golang-ddd.fullname" . }}
+  name: {{ include "helm-api-golang-ddd.fullname" . }}
   labels:
-    {{- include "api-golang-ddd.labels" . | nindent 4 }}
+    {{- include "helm-api-golang-ddd.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "api-golang-ddd.selectorLabels" . | nindent 6 }}
+      {{- include "helm-api-golang-ddd.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,7 +18,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "api-golang-ddd.labels" . | nindent 8 }}
+        {{- include "helm-api-golang-ddd.labels" . | nindent 8 }}
         {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -27,7 +27,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "api-golang-ddd.serviceAccountName" . }}
+      serviceAccountName: {{ include "helm-api-golang-ddd.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
