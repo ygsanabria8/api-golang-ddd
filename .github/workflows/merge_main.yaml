@@ -18,7 +18,7 @@ env:
   VERSION: ${{ github.run_number }}
   OWNER: ${{ github.repository_owner }}
   HELM_VERSION: 0.${{ github.run_number }}.0
-  HELM_APP_NAME: helm-api-golang-ddd
+  HELM_APP_NAME: helm-${{ vars.APP_NAME }}
 
 jobs:
   Build_Image:
@@ -64,4 +64,4 @@ jobs:
       - name: Push Helm In GitHub Container Registry
         run: |
           cd .docker
-          helm push ./${{ env.HELM_APP_NAME}}-${{ env.HELM_VERSION }}.tgz oci://${{ env.REGISTRY }}/${{ env.OWNER }}-helm
+          helm push ./${{ env.HELM_APP_NAME}}-${{ env.HELM_VERSION }}.tgz oci://${{ env.REGISTRY }}/${{ env.OWNER }}
