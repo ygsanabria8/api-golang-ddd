@@ -152,6 +152,39 @@ func (_c *IController_GetUserById_Call) RunAndReturn(run func(*gin.Context)) *IC
 	return _c
 }
 
+// Health provides a mock function with given fields: ctx
+func (_m *IController) Health(ctx *gin.Context) {
+	_m.Called(ctx)
+}
+
+// IController_Health_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Health'
+type IController_Health_Call struct {
+	*mock.Call
+}
+
+// Health is a helper method to define mock.On call
+//   - ctx *gin.Context
+func (_e *IController_Expecter) Health(ctx interface{}) *IController_Health_Call {
+	return &IController_Health_Call{Call: _e.mock.On("Health", ctx)}
+}
+
+func (_c *IController_Health_Call) Run(run func(ctx *gin.Context)) *IController_Health_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(*gin.Context))
+	})
+	return _c
+}
+
+func (_c *IController_Health_Call) Return() *IController_Health_Call {
+	_c.Call.Return()
+	return _c
+}
+
+func (_c *IController_Health_Call) RunAndReturn(run func(*gin.Context)) *IController_Health_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // UpdateUser provides a mock function with given fields: ctx
 func (_m *IController) UpdateUser(ctx *gin.Context) {
 	_m.Called(ctx)

@@ -15,14 +15,18 @@ on:
 
 env:
   REGISTRY: ghcr.io
+  VERSION: ${{ github.run_number }}
+  OWNER: ${{ github.repository_owner }}
+  HELM_VERSION: 0.${{ github.run_number }}.0
 
 jobs:
-  Build_Push_Image_GitHub:
+  Build_Image:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Cloning Repo
+        uses: actions/checkout@v4
 
-      - name: Login To Registry (GitHub)
+      - name: Login To GitHub Container Registry
         uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
@@ -31,5 +35,31 @@ jobs:
 
       - name: Build and push
         run: |
-          docker build -f .docker/Dockerfile -t ${{ env.REGISTRY }}/${{ github.actor }}/${{ vars.APP_NAME }}:${{ github.run_number }}  .
-          docker push ${{ env.REGISTRY }}/${{ github.actor }}/${{ vars.APP_NAME }}:${{ github.run_number }}
+          docker build -f .docker/Dockerfile -t ${{ env.REGISTRY }}/${{ env.OWNER }}/${{ vars.APP_NAME }}:${{ env.VERSION }}  .
+          docker push ${{ env.REGISTRY }}/${{ env.OWNER }}/${{ vars.APP_NAME }}:${{ env.VERSION }}
+
+  Build_Helm:
+    needs: Build_Image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cloning Repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set Work Dir
+        run: cd .docker
+
+      - name: Setup Helm
+        uses: azure/setup-helm@v4.2.0
+        with:
+          version: v3.15.4
+
+      - name: Build Helm Chart
+        run: helm package api-golang-ddd/ --app-version ${{ env.VERSION }} --version ${{ env.HELM_VERSION }}
+
+      - name: Helm Login In GitHub Container Registry
+        run: echo ${{ secrets.GH_TOKEN }} | helm registry login ${{ env.REGISTRY }}/${{ env.OWNER }} --username ${{ env.OWNER }} --password-stdin
+
+      - name: Push Helm In GitHub Container Registry
+        run: helm push ./api-golang-ddd${{ env.HELM_VERSION }}.tgz oci://${{ env.REGISTRY }}/helm/${{ env.OWNER }}

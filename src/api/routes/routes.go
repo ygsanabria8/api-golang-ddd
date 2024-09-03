@@ -12,8 +12,9 @@ func ConfigureRoutes(
 ) {
 	logger.Info("Setting up routes")
 
-	api := server.Group("/api/ms-user/v1")
+	server.GET("/health", controller.Health)
 
+	api := server.Group("/api/ms-user/v1")
 	user := api.Group("/user")
 	{
 		user.POST("", controller.CreateUser)

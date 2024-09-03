@@ -14,8 +14,13 @@ type IUserController interface {
 	UpdateUser(ctx *gin.Context)
 }
 
+type IHealthController interface {
+	Health(ctx *gin.Context)
+}
+
 type IController interface {
 	IUserController
+	IHealthController
 }
 
 type Controller struct {
