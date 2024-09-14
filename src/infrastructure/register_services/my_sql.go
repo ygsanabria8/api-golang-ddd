@@ -31,5 +31,6 @@ func ProvideSqlClient(logger *server.Logger, config *server.Configuration) *gorm
 		panic(err.Error())
 	}
 
+	logger.Debug("Connected To My SQL")
 	return client
 }
