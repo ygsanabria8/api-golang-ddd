@@ -59,8 +59,7 @@ To execute this project run:
    ```
 ##### Set up environment variables using Viper and Docker:
 
-Create a .env file for local environment variables accordint to env.template.
-Use Docker for spinning up Kafka, MySQL, and MongoDB containers.
+Create a .env file for local environment variables according to env.template.
 
 ##### Install dependencies
    ```bash
