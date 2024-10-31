@@ -21,19 +21,19 @@ permissions:
 
 
 jobs:
-  Manual_Approval:
-    uses: trstringer/manual-approval@v1.9.1
-    with:
-      secret: ${{ github.TOKEN }}
-      approvers: ygsanabria8
-      minimum-approvals: 1
-      issue-title: "Request Approval For Building Project"
-      issue-body: "Please verify if ypu want to deploy this project"
-      timeout-minutes: 2
-
   Build_Project:
     runs-on: ubuntu-22.04
     steps:
+      - name: Manual Workflow Approval
+        uses: trstringer/manual-approval@v1.9.1
+        with:
+          secret: ${{ github.TOKEN }}
+          approvers: ygsanabria8
+          minimum-approvals: 1
+          issue-title: "Request Approval For Building Project"
+          issue-body: "Please verify if ypu want to deploy this project"
+          timeout-minutes: 2
+        
       - name: Cloning Project
         uses: actions/checkout@v4
 
