@@ -1,7 +1,8 @@
 module api.ddd
 
-go 1.22.2
-toolchain go1.24.1
+go 1.23.0
+
+toolchain go1.24.3
 
 require (
 	github.com/IBM/sarama v1.43.3
